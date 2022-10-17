@@ -20,8 +20,7 @@ public class SecurityConfig {
                 )
                 .authorizeRequests(
                         authorizeRequests -> authorizeRequests
-                                .antMatchers("/**")
-                                .permitAll()
+                                .antMatchers("/**").permitAll()
                 );
 
         return http.build();
