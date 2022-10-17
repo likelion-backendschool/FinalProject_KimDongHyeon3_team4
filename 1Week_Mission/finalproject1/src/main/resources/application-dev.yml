@@ -1,9 +1,4 @@
 spring:
-  devtools:
-    livereload:
-      enabled: true
-    restart:
-      enabled: true
   datasource:
     url: jdbc:mariadb://127.0.0.1:3306/finalproject?useUnicode=true&characterEncoding=utf8&autoReconnect=true&serverTimezone=Asia/Seoul
     username: codelion
@@ -11,3 +6,14 @@ spring:
   jpa:
     hibernate:
       ddl-auto: create
+  mail:
+    host: smtp.gmail.com
+    port: 587
+    username: kimdonghyeon98@gmail.com
+    password: rovjrkeqmatylzuz
+    properties:
+      mail:
+        smtp:
+          auth: true
+          starttls:
+            enable: true
