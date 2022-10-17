@@ -1,0 +1,8 @@
+spring:
+  datasource:
+    url: jdbc:mariadb://127.0.0.1:3306/finalproject?useUnicode=true&characterEncoding=utf8&autoReconnect=true&serverTimezone=Asia/Seoul
+    username: codelion
+    password: 1111
+  jpa:
+    hibernate:
+      ddl-auto: create
