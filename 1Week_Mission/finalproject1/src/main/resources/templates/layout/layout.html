@@ -32,6 +32,9 @@
 <!-- 데이지 UI -->
 <link href="https://cdn.jsdelivr.net/npm/daisyui@2.31.0/dist/full.css" rel="stylesheet" type="text/css"/>
 
+<!-- common.css -->
+<link href="/common/common.css" rel="stylesheet" type="text/css"/>
+
 <header class="fixed z-40 top-0 left-0 w-full bg-white border-b-[1px] border-b-[color:#efefef] h-[35px]">
     <div class="container mx-auto h-full flex items-center px-2">
         <a href="/" class="logo flex font-bold mr-auto">
@@ -93,6 +96,20 @@
         </div>
     </div>
 </footer>
+
+<script src="/common/common.js"></script>
+
+<script th:inline="javascript">
+    const params = /*[[ ${param} ]]*/ null;
+
+    if (params.msg) {
+        successModal(params.msg);
+    }
+
+    if (params.errorMsg) {
+        errorModal(params.errorMsg);
+    }
+</script>
 
 
 </body>

@@ -22,6 +22,8 @@
 
                     form.username.value = form.username.value.trim();
 
+                    console.log("durldaf")
+
                     if (form.username.value.length == 0) {
                         warningModal("로그인아이디를 입력해주세요.");
                         form.username.focus();
@@ -73,9 +75,25 @@
 
                 <div class="form-control">
                     <label class="label">
+                        <span class="label-text">비밀번호 확인</span>
+                    </label>
+                    <input type="password" name="passwordConfirm"
+                           placeholder="비밀번호 재입력" class="input input-bordered" maxlength="50">
+                </div>
+
+                <div class="form-control">
+                    <label class="label">
                         <span class="label-text">이메일</span>
                     </label>
                     <input type="email" name="email" placeholder="이메일" class="input input-bordered" maxlength="50">
+                </div>
+
+                <div class="form-control">
+                    <label class="label">
+                        <span class="label-text">닉네임</span>
+                    </label>
+                    <input autofocus type="text" name="nickname" placeholder="닉네임" class="input input-bordered"
+                           maxlength="50">
                 </div>
 
                 <div class="grid grid-cols-2 mt-2 gap-2">
