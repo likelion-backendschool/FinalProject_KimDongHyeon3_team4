@@ -1,12 +1,20 @@
 package com.example.finalproject1.member.entity;
 
+import lombok.*;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
 
 @Entity
+@Builder
+@Getter
+@Setter
+@AllArgsConstructor
+@NoArgsConstructor
+@EntityListeners(AuditingEntityListener.class)
 public class Member {
 
     @Id
@@ -24,6 +32,9 @@ public class Member {
 
     @Column
     String nickname;
+
+    @Column
+    int authLevel;
 
     @CreatedDate
     private LocalDateTime createDate;
