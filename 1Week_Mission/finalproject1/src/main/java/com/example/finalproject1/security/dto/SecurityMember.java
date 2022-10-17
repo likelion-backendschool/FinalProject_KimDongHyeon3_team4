@@ -30,6 +30,10 @@ public class SecurityMember extends User {
         this.authLevel = member.getAuthLevel();
     }
 
+    public String getName() {
+        return getUsername();
+    }
+
     public Member getMember() {
         return Member
                 .builder()
@@ -41,9 +45,5 @@ public class SecurityMember extends User {
                 .nickname(nickname)
                 .authLevel(authLevel)
                 .build();
-    }
-
-    public String getName() {
-        return getUsername();
     }
 }

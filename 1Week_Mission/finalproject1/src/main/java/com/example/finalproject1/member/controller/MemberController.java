@@ -20,15 +20,29 @@ public class MemberController {
     private final MemberService memberService;
 
     @GetMapping("/join")
-    public String joinShow(){
+    public String showJoin(){
         return "/member/join";
     }
 
     @PostMapping("/join")
     public String join(@Valid JoinForm joinForm){
-
         memberService.save(joinForm.getUsername(), joinForm.getPassword(), joinForm.getEmail(), joinForm.getNickname());
+        return "redirect:/";
+    }
 
+    @GetMapping("/login")
+    public String showLogin(){
+        return "/member/login";
+    }
+
+    @PostMapping("/login")
+    public String login(String username, String password){
+        System.out.println("username = " + username);
+        return "redirect:/";
+    }
+
+    @GetMapping("/logout")
+    public String logout(){
         return "redirect:/";
     }
 
