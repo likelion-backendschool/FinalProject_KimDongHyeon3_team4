@@ -1,7 +1,7 @@
 spring:
   config:
     import:
-    - optional:classpath:/application-secret.yml
+    - optional:classpath:/application-secret1.yml
   profiles:
     active: dev
   datasource:
