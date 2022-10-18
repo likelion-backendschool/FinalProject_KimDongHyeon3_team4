@@ -5,6 +5,7 @@ import com.example.finalproject1.member.entity.Member;
 import com.example.finalproject1.member.service.MemberService;
 import com.example.finalproject1.security.dto.SecurityMember;
 import com.example.finalproject1.security.service.SecurityMemberService;
+import com.example.finalproject1.util.Util;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -82,13 +83,36 @@ public class MemberController {
         return "redirect:/member/profile";
     }
 
+    @GetMapping("/modifyPassword")
+    public String showModifyPassword(){
+        return "/member/modifypassword";
+    }
+
     @PostMapping("/modifyPassword")
     public String modifyPassword(Principal principal, String modifypassword, String password){
 
-        return "redirect:/member/modify";
+        Member member = memberService.findByUsername(principal.getName());
+
+        log.info("passwordEncoder.matches(password, member.getPassword()) = {} ", passwordEncoder.matches(password, member.getPassword()));
+
+        if(!passwordEncoder.matches(password, member.getPassword())){
+            return "redirect:/member/modifyPassword?msg=" + Util.url.encode("비밀번호가 일치하지 않습니다.");
+        }
+
+        member.setPassword(passwordEncoder.encode(modifypassword));
+
+        memberService.save(member);
+
+        //변경된 회원 정보를 Security에 적용 (타임리프에 적용하기 위함)
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        SecurityMember securityMember = (SecurityMember) authentication.getPrincipal();
+        SecurityContextHolder.getContext().setAuthentication(createNewAuthentication(authentication,securityMember.getUsername()));
+
+        return "redirect:/member/profile?msg=" + Util.url.encode("비밀번호가 올바르게 변경되었습니다.");
     }
 
     protected Authentication createNewAuthentication(Authentication currentAuth, String username) {
+
         SecurityMember newPrincipal = (SecurityMember) securityMemberService.loadUserByUsername(username);
         UsernamePasswordAuthenticationToken newAuth = new UsernamePasswordAuthenticationToken(newPrincipal, currentAuth.getCredentials(), newPrincipal.getAuthorities());
         newAuth.setDetails(currentAuth.getDetails());

@@ -9,6 +9,15 @@
 <main layout:fragment="main">
     <section class="section section-join flex-grow flex flex-col items-center justify-center">
 
+        <script>
+            if( window.location.href.split("?").length > 1){
+                var misMatchPassword = window.location.href.split("?")[1];
+                var misMatchPasswordMsg = misMatchPassword.split("=")[1];
+
+                warningModal(misMatchPasswordMsg);
+            }
+        </script>
+
         <div class="max-w-md w-full px-2 pt-4">
             <h1 class="font-bold text-lg">회원정보</h1>
 
@@ -30,12 +39,10 @@
 
 
                 <div class="form-control">
-                    <form th:action="@{/member/modify}" method="POST">
                         <label class="label">
                             <span class="label-text">현재 작가명</span>
                         </label>
                         <div th:text="${#authentication.principal.nickname} == null ? '일반회원 입니다. 작가명을 수정하세요' : ${#authentication.principal.nickname}"></div>
-                    </form>
                 </div>
 
                 <div class="grid grid-cols-2 mt-2 gap-2">
