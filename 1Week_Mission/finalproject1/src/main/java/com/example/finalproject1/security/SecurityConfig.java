@@ -25,12 +25,14 @@ public class SecurityConfig {
                 .csrf(
                         csrf -> csrf.disable()
                 )
-                .authorizeRequests(
-                        authorizeRequests -> authorizeRequests
-                                .antMatchers("/").permitAll()
-                                .antMatchers("/member/join").permitAll()
-                                //.antMatchers("/member/login").permitAll()
-                ).formLogin(
+//                .authorizeRequests(
+//                        authorizeRequests -> authorizeRequests
+//                                .antMatchers("/", "/member/join**", "/member/login**").permitAll()
+//                                .antMatchers("/member/findUsername**", "/member/findPassword**").permitAll()
+//                                .anyRequest()
+//                                .authenticated()
+//                )
+                .formLogin(
                         formLogin -> formLogin
                                 .loginPage("/member/login") // GET
                                 .loginProcessingUrl("/member/login") // POST

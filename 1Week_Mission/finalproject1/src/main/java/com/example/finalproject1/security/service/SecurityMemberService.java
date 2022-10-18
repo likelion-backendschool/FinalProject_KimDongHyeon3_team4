@@ -34,5 +34,4 @@ public class SecurityMemberService implements UserDetailsService {
 
         return new SecurityMember(member, authorities);
     }
-
 }

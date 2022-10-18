@@ -48,16 +48,6 @@ public class MemberController {
         return "/member/login";
     }
 
-//    @PostMapping("/login")
-//    public String login(String username, String password){
-//        System.out.println("username = " + username);
-//        return "redirect:/";
-//    }
-//    @GetMapping("/logout")
-//    public String logout(){
-//        return "redirect:/";
-//    }
-
     @GetMapping("/profile")
     public String showProfile(){
         return "/member/profile";
