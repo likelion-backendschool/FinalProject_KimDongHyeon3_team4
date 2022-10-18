@@ -52,14 +52,14 @@ public class DevInitData {
             postRepository.save(Post.builder()
                     .author(member1)
                     .subject("제목1")
-                    .content("내용1")
+                    .content("**내용1**")
                     .contentHtml("내용html1")
                     .build());
 
             postRepository.save(Post.builder()
                     .author(member2)
                     .subject("제목2")
-                    .content("내용2")
+                    .content("**내용2**")
                     .contentHtml("내용html2")
                     .build());
         };

@@ -1,15 +1,12 @@
 package com.example.finalproject1.util;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 
+import org.commonmark.node.Node;
+import org.commonmark.parser.Parser;
+import org.commonmark.renderer.html.HtmlRenderer;
+import org.springframework.stereotype.Component;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
-import java.util.LinkedHashMap;
-import java.util.Map;
 
 public class Util {
 
