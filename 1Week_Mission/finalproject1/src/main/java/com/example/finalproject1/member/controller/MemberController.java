@@ -13,12 +13,14 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import javax.validation.Valid;
 import java.security.Principal;
+import java.util.Optional;
 
 @Controller
 @RequestMapping("/member")
@@ -109,6 +111,23 @@ public class MemberController {
         SecurityContextHolder.getContext().setAuthentication(createNewAuthentication(authentication,securityMember.getUsername()));
 
         return "redirect:/member/profile?msg=" + Util.url.encode("비밀번호가 올바르게 변경되었습니다.");
+    }
+
+    @GetMapping("/findUsername")
+    public String showFindUsername(){
+        return "/member/findUsername";
+    }
+
+    @PostMapping("/findUsername")
+    public String findUsername(String email){
+
+        Optional<Member> member = Optional.ofNullable(memberService.findByEmail(email));
+
+        if(!member.isPresent()){
+            return "redirect:/member/findUsername?msg=" + Util.url.encode("등록된 아이디가 없습니다.");
+        }
+
+        return "redirect:/member/findUsername?msg=" + member.get().getUsername();
     }
 
     protected Authentication createNewAuthentication(Authentication currentAuth, String username) {

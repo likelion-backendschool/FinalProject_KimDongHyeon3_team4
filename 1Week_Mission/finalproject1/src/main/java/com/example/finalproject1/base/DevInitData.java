@@ -23,7 +23,7 @@ public class DevInitData {
             memberRepository.save(Member.builder()
                     .username("admin")
                     .password(passwordEncoder.encode("1234"))
-                    .email("sh2115521@naver.com")
+                    .email("admin@naver.com")
                     .nickname("admin")
                     .authLevel(7)
                     .build());
