@@ -37,6 +37,17 @@ public class PostService {
         postRepository.save(post);
     }
 
+    public void save(String subject, String content, Post post) {
+
+        String contentHtml = markDown.markdownWrite(content);
+
+        post.setSubject(subject);
+        post.setContent(content);
+        post.setContentHtml(contentHtml);
+
+        postRepository.save(post);
+    }
+
     public void deleteById(Long id) {
         postRepository.deleteById(id);
     }

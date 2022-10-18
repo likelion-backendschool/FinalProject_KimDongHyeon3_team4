@@ -73,6 +73,31 @@ public class PostController {
         return "redirect:/post/list?msg=" + Util.url.encode(id + "글이 삭제되었습니다.");
     }
 
+    @GetMapping("/{id}/modify")
+    public String showPostModify(@PathVariable Long id, Model model){
 
+        Optional<Post> post = postService.findById(id);
 
+        if(!post.isPresent()){
+            return "redirect:/post/list?msg=" + Util.url.encode("해당 글이 존재하지 않습니다.");
+        }
+
+        model.addAttribute("post", post.get());
+
+        return "/post/modify";
+    }
+
+    @PostMapping("/{id}/modify")
+    public String postModify(@PathVariable Long id, String subject, String content){
+
+        Optional<Post> post = postService.findById(id);
+
+        if(!post.isPresent()){
+            return "redirect:/post/list?msg=" + Util.url.encode("해당 글이 존재하지 않습니다.");
+        }
+
+        postService.save(subject, content, post.get());
+
+        return "redirect:/post/" + id;
+    }
 }
