@@ -9,20 +9,55 @@
 <main layout:fragment="main">
     <section class="section section-join flex-grow flex flex-col items-center justify-center">
 
-        <h5 class="my-3 border-bottom pb-2">글 작성</h5>
-        <form th:action="@{''}" th:object="${questionForm}" method="post">
-            <!--        <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />-->
-            <div th:replace="form_errors :: formErrorsFragment"></div>
-            <div class="mb-3">
-                <label for="subject" class="form-label">제목</label>
-                <input type="text" th:field="*{subject}" class="form-control">
-            </div>
-            <div class="mb-3">
-                <label for="content" class="form-label">내용</label>
-                <textarea th:field="*{content}" class="form-control" rows="10"></textarea>
-            </div>
-            <input type="submit" value="저장하기" class="btn btn-primary my-2">
-        </form>
+        <div class="max-w-md w-full px-2 pt-4">
+            <h1 class="font-bold text-lg">글 작성</h1>
+
+            <script>
+
+                function MemberLogin__submit(form) {
+
+                    form.subject.value = form.subject.value.trim();
+                    if (form.subject.value.length == 0) {
+                        warningModal("제목을 입력해주세요.");
+                        form.subject.focus();
+                        return;
+                    }
+
+
+                    if (form.content.value.length == 0) {
+                        warningModal("내용을 입력해주세요.");
+                        form.content.focus();
+                        return;
+                    }
+                    form.submit();
+                }
+            </script>
+
+            <form th:action method="POST" class="flex flex-col gap-3" onsubmit="MemberLogin__submit(this); return false;">
+                <div class="form-control">
+                    <label class="label">
+                        <span class="label-text">제목</span>
+                    </label>
+                    <input autofocus type="text" name="subject" placeholder="제목" class="input input-bordered" maxlength="50">
+                </div>
+
+                <div class="form-control">
+                    <label class="label">
+                        <span class="label-text">내용</span>
+                    </label>
+                    <textarea class="form-control block w-full px-3 py-1.5 text-base font-normal text-gray-700 bg-white bg-clip-padding border border-solid border-gray-300
+                                    rounded transition ease-in-out m-0 focus:text-gray-700 focus:bg-white focus:border-blue-600 focus:outline-none"
+                            id="exampleFormControlTextarea1"
+                            rows="3" name="content" placeholder="내용"></textarea>
+                </div>
+
+                <div class="grid grid-cols-2 mt-2 gap-2">
+                    <input class="btn btn-primary" type="submit" value="글 작성하기">
+                </div>
+            </form>
+        </div>
+
+        </div>
 
     </section>
 </main>
