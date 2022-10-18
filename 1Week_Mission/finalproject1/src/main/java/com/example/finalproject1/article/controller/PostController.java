@@ -62,8 +62,15 @@ public class PostController {
         principal.getName();
         postService.save(subject, content, member);
 
-
         return "redirect:/post/list?msg=" + Util.url.encode("글을 작성하였습니다.");
+    }
+
+    @GetMapping("/{id}/delete")
+    public String postDelete(@PathVariable Long id){
+
+        postService.deleteById(id);
+
+        return "redirect:/post/list?msg=" + Util.url.encode(id + "글이 삭제되었습니다.");
     }
 
 
