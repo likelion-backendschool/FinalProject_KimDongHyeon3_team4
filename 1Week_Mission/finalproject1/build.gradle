@@ -23,7 +23,6 @@ dependencies {
     //Security
     testImplementation 'org.springframework.security:spring-security-test'
     implementation 'org.springframework.boot:spring-boot-starter-security'
-    implementation 'org.thymeleaf.extras:thymeleaf-extras-springsecurity5'
 
     //DB
     runtimeOnly 'org.mariadb.jdbc:mariadb-java-client'
@@ -34,6 +33,7 @@ dependencies {
     //thymeleaf
     implementation 'org.springframework.boot:spring-boot-starter-thymeleaf'
     implementation 'nz.net.ultraq.thymeleaf:thymeleaf-layout-dialect:3.1.0'
+    implementation 'org.thymeleaf.extras:thymeleaf-extras-springsecurity5'
 
     //other
     developmentOnly 'org.springframework.boot:spring-boot-devtools'

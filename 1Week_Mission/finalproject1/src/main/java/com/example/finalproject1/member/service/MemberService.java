@@ -32,4 +32,14 @@ public class MemberService {
         emailMessage.setSubject("서비스 가입을 완료하였습니다.");
         javaMailSender.send(emailMessage);
     }
+
+    public void save(Member member) {
+        memberRepository.save(member);
+    }
+
+
+
+    public Member findByUsername(String username) {
+        return memberRepository.findByUsername(username);
+    }
 }

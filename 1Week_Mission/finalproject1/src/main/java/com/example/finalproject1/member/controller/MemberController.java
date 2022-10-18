@@ -1,15 +1,23 @@
 package com.example.finalproject1.member.controller;
 
 import com.example.finalproject1.member.dto.JoinForm;
+import com.example.finalproject1.member.entity.Member;
 import com.example.finalproject1.member.service.MemberService;
+import com.example.finalproject1.security.dto.SecurityMember;
+import com.example.finalproject1.security.service.SecurityMemberService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import javax.validation.Valid;
+import java.security.Principal;
 
 @Controller
 @RequestMapping("/member")
@@ -18,6 +26,8 @@ import javax.validation.Valid;
 public class MemberController {
 
     private final MemberService memberService;
+    private final SecurityMemberService securityMemberService;
+    private final PasswordEncoder passwordEncoder;
 
     @GetMapping("/join")
     public String showJoin(){
@@ -35,15 +45,54 @@ public class MemberController {
         return "/member/login";
     }
 
-    @PostMapping("/login")
-    public String login(String username, String password){
-        System.out.println("username = " + username);
-        return "redirect:/";
+//    @PostMapping("/login")
+//    public String login(String username, String password){
+//        System.out.println("username = " + username);
+//        return "redirect:/";
+//    }
+//    @GetMapping("/logout")
+//    public String logout(){
+//        return "redirect:/";
+//    }
+
+    @GetMapping("/profile")
+    public String showProfile(){
+        return "/member/profile";
     }
 
-    @GetMapping("/logout")
-    public String logout(){
-        return "redirect:/";
+    @GetMapping("/modify")
+    public String showModifyNickname(){
+        return "/member/modify";
+    }
+
+    @PostMapping("/modify")
+    public String modifyNickname(Principal principal, String modifynickname){
+
+        Member member = memberService.findByUsername(principal.getName());
+
+        member.setNickname(modifynickname);
+
+        memberService.save(member);
+
+        //변경된 회원 정보를 Security에 적용 (타임리프에 적용하기 위함)
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        SecurityMember securityMember = (SecurityMember) authentication.getPrincipal();
+        SecurityContextHolder.getContext().setAuthentication(createNewAuthentication(authentication,securityMember.getUsername()));
+
+        return "redirect:/member/profile";
+    }
+
+    @PostMapping("/modifyPassword")
+    public String modifyPassword(Principal principal, String modifypassword, String password){
+
+        return "redirect:/member/modify";
+    }
+
+    protected Authentication createNewAuthentication(Authentication currentAuth, String username) {
+        SecurityMember newPrincipal = (SecurityMember) securityMemberService.loadUserByUsername(username);
+        UsernamePasswordAuthenticationToken newAuth = new UsernamePasswordAuthenticationToken(newPrincipal, currentAuth.getCredentials(), newPrincipal.getAuthorities());
+        newAuth.setDetails(currentAuth.getDetails());
+        return newAuth;
     }
 
 }
