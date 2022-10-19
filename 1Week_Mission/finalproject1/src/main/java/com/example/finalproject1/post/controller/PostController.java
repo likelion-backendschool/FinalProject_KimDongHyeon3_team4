@@ -17,8 +17,10 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
+import java.security.KeyStore;
 import java.security.Principal;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Optional;
 
@@ -67,12 +69,15 @@ public class PostController {
     }
 
     @PostMapping("/write")
-    public String postWrite(String subject, String content, Principal principal){
+    public String postWrite(String subject, String content, String tags, Principal principal){
+
+
+        System.out.println("tags = " + tags);
 
         Member member = memberService.findByUsername(principal.getName());
 
         principal.getName();
-        postService.save(subject, content, member);
+        postService.save(subject, content, member, tags);
 
         return "redirect:/post/list?msg=" + Util.url.encode("글을 작성하였습니다.");
     }
