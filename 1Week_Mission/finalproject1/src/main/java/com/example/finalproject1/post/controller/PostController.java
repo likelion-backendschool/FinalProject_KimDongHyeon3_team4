@@ -1,7 +1,11 @@
-package com.example.finalproject1.article.controller;
+package com.example.finalproject1.post.controller;
 
-import com.example.finalproject1.article.entity.Post;
-import com.example.finalproject1.article.service.PostService;
+import com.example.finalproject1.hashtag.entity.HashTag;
+import com.example.finalproject1.hashtag.service.HashTagService;
+import com.example.finalproject1.keyword.entity.Keyword;
+import com.example.finalproject1.keyword.service.KeywordService;
+import com.example.finalproject1.post.entity.Post;
+import com.example.finalproject1.post.service.PostService;
 import com.example.finalproject1.member.entity.Member;
 import com.example.finalproject1.member.service.MemberService;
 import com.example.finalproject1.util.Util;
@@ -14,6 +18,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import java.security.Principal;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -24,13 +29,17 @@ public class PostController {
 
     private final PostService postService;
     private final MemberService memberService;
+    private final KeywordService keywordService;
+    private final HashTagService hashTagService;
 
     @GetMapping("/list")
     public String showPostList(Model model){
 
         List<Post> posts = postService.findAll();
+        List<Keyword> hashtags = keywordService.findAll();
 
         model.addAttribute("posts",posts);
+        model.addAttribute("hashtags",hashtags);
 
         return "/post/list";
     }
@@ -44,7 +53,10 @@ public class PostController {
             return "redirect:/post/list?msg=" + Util.url.encode("해당 글이 존재하지 않습니다.");
         }
 
+        List<Keyword> hashtags = hashTagService.findByPost(post.get());
+
         model.addAttribute("post",post.get());
+        model.addAttribute("hashtags",hashtags);
 
         return "/post/detail";
     }

@@ -1,8 +1,9 @@
-package com.example.finalproject1.article.entity;
+package com.example.finalproject1.hashtag.entity;
 
-
-import com.example.finalproject1.member.entity.Member;
+import com.example.finalproject1.keyword.entity.Keyword;
+import com.example.finalproject1.post.entity.Post;
 import lombok.*;
+import lombok.experimental.SuperBuilder;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
@@ -11,33 +12,28 @@ import javax.persistence.*;
 import java.time.LocalDateTime;
 
 @Entity
-@Builder
-@Getter
 @Setter
+@Getter
 @AllArgsConstructor
 @NoArgsConstructor
+@SuperBuilder
+@ToString(callSuper = true)
 @EntityListeners(AuditingEntityListener.class)
-public class Post {
+public class HashTag{
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     Long id;
-
-    @ManyToOne
-    @JoinColumn(foreignKey = @ForeignKey(ConstraintMode.NO_CONSTRAINT))
-    Member author;
-
-    @Column
-    String subject;
-
-    @Column
-    String content;
-
-    @Column
-    String contentHtml;
 
     @CreatedDate
     private LocalDateTime createDate;
 
     @LastModifiedDate
     private LocalDateTime modifyDate;
+
+    @ManyToOne
+    private Post post;
+
+    @ManyToOne
+    private Keyword keyword;
+
 }

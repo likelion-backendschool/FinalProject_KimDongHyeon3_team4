@@ -1,7 +1,8 @@
-package com.example.finalproject1.article.service;
+package com.example.finalproject1.post.service;
 
-import com.example.finalproject1.article.entity.Post;
-import com.example.finalproject1.article.repository.PostRepository;
+import com.example.finalproject1.hashtag.service.HashTagService;
+import com.example.finalproject1.post.entity.Post;
+import com.example.finalproject1.post.repository.PostRepository;
 import com.example.finalproject1.member.entity.Member;
 import com.example.finalproject1.util.MarkDown;
 import lombok.RequiredArgsConstructor;
@@ -14,6 +15,7 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class PostService {
     private final PostRepository postRepository;
+    private final HashTagService hashTagService;
     private final MarkDown markDown;
     public List<Post> findAll() {
         return postRepository.findAll();
@@ -35,6 +37,22 @@ public class PostService {
                 .build();
 
         postRepository.save(post);
+    }
+
+    public void save(String subject, String content, Member member, String hashTagStr) {
+
+        String contentHtml = markDown.markdownWrite(content);
+
+        Post post = Post.builder()
+                .author(member)
+                .subject(subject)
+                .content(content)
+                .contentHtml(contentHtml)
+                .build();
+
+        postRepository.save(post);
+
+        hashTagService.applyHashTags(post, hashTagStr);
     }
 
     public void save(String subject, String content, Post post) {

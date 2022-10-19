@@ -1,11 +1,11 @@
 package com.example.finalproject1.base;
 
-import com.example.finalproject1.article.entity.Post;
-import com.example.finalproject1.article.repository.PostRepository;
+import com.example.finalproject1.post.entity.Post;
+import com.example.finalproject1.post.repository.PostRepository;
 import com.example.finalproject1.member.entity.Member;
 import com.example.finalproject1.member.repository.MemberRepository;
+import com.example.finalproject1.post.service.PostService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -20,7 +20,7 @@ public class DevInitData {
     private final PasswordEncoder passwordEncoder;
 
     @Bean
-    CommandLineRunner init(MemberRepository memberRepository, PostRepository postRepository) {
+    CommandLineRunner init(MemberRepository memberRepository, PostRepository postRepository, PostService postService) {
         return args -> {
             memberRepository.save(Member.builder()
                     .username("admin")
@@ -62,6 +62,9 @@ public class DevInitData {
                     .content("**내용2**")
                     .contentHtml("내용html2")
                     .build());
+
+           postService.save("제목3","내용3", member1, "#자바 #프로그래밍");
+           postService.save("제목4","내용4", member2, "#파이썬 #프로그래밍");
         };
     }
 

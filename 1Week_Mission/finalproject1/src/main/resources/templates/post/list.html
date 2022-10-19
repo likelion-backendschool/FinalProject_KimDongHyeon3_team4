@@ -9,6 +9,14 @@
 <main layout:fragment="main">
     <section class="section section-join flex-grow flex flex-col items-center justify-center">
 
+        <div class="flex space-x-2 justify-center">
+            <th:block th:each="hashTag : ${hashtags}">
+                <a th:href="@{|/post/list?hashtag=${hashTag.content}|}" class="inline-block px-6 py-2 border-2 border-blue-600 text-blue-600 font-medium text-xs leading-tight uppercase rounded hover:bg-black hover:bg-opacity-5 focus:outline-none focus:ring-0 transition duration-150 ease-in-out">
+                    #[[${hashTag.content}]]
+                </a>
+            </th:block>
+        </div>
+
         <div class="row my-3">
             <div class="col-6">
                 <a th:href="@{/post/write}" class="btn btn-primary">글 작성</a>

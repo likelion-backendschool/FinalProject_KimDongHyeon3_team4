@@ -27,6 +27,15 @@
                     </label>
                 </div>
 
+                <div>
+                    해시태그 :
+                    <th:block th:each="hashTag : ${hashtags}">
+                        <a th:href="@{|/post/list?hashtag=${hashTag.content}|}">
+                            #[[${hashTag.content}]]
+                        </a>
+                    </th:block>
+                </div>
+
                 <div class="my-3">
                     <a th:href="@{|/post/${post.id}/modify|}"
                        class="btn btn-sm btn-outline-secondary"
