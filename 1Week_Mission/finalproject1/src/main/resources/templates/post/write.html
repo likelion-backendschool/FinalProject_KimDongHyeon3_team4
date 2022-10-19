@@ -14,6 +14,7 @@
             <h1 class="font-bold text-lg">글 작성</h1>
 
             <script>
+
                 function MemberLogin__submit(form) {
 
                     form.subject.value = form.subject.value.trim();
@@ -39,8 +40,6 @@
                     form.tags.value = form.tags.value.replaceAll("value"," ");
                     form.tags.value = form.tags.value.replaceAll(":","#");
 
-                    console.log(form.tags.value);
-
                     form.submit();
                 }
             </script>
@@ -63,7 +62,7 @@
                             rows="3" name="content" placeholder="내용"></textarea>
                 </div>
 
-                <input name='tags' placeholder='write some tags'/>
+                <input name='tags' placeholder='write some tags' />
 
                 <div class="grid grid-cols-2 mt-2 gap-2">
                     <input class="btn btn-primary" type="submit" value="글 작성하기">

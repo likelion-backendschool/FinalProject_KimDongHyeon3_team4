@@ -99,13 +99,16 @@ public class PostController {
             return "redirect:/post/list?msg=" + Util.url.encode("해당 글이 존재하지 않습니다.");
         }
 
+        List<Keyword> hashtags = hashTagService.findByPost(post.get());
+
         model.addAttribute("post", post.get());
+        model.addAttribute("hashtags",hashtags);
 
         return "/post/modify";
     }
 
     @PostMapping("/{id}/modify")
-    public String postModify(@PathVariable Long id, String subject, String content){
+    public String postModify(@PathVariable Long id, String subject, String content, String tags){
 
         Optional<Post> post = postService.findById(id);
 
@@ -113,7 +116,7 @@ public class PostController {
             return "redirect:/post/list?msg=" + Util.url.encode("해당 글이 존재하지 않습니다.");
         }
 
-        postService.save(subject, content, post.get());
+        postService.save(subject, content, post.get(), tags);
 
         return "redirect:/post/" + id;
     }

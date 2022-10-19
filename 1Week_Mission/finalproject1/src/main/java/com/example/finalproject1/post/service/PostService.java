@@ -55,13 +55,15 @@ public class PostService {
         hashTagService.applyHashTags(post, hashTagStr);
     }
 
-    public void save(String subject, String content, Post post) {
+    public void save(String subject, String content, Post post, String hashTagStr) {
 
         String contentHtml = markDown.markdownWrite(content);
 
         post.setSubject(subject);
         post.setContent(content);
         post.setContentHtml(contentHtml);
+
+        hashTagService.applyHashTags(post, hashTagStr);
 
         postRepository.save(post);
     }
