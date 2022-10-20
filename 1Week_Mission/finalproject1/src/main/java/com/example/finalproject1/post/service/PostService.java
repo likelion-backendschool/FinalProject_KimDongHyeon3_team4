@@ -22,8 +22,8 @@ public class PostService {
         return postRepository.findAll();
     }
 
-    public Optional<Post> findById(Long id) {
-        return postRepository.findById(id);
+    public Post findById(Long id) {
+        return postRepository.findById(id).orElse(null);
     }
 
     public void save(String subject, String content, Member member) {

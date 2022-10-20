@@ -42,7 +42,6 @@ public class MemberController {
         memberService.save(joinForm.getUsername(), joinForm.getPassword(), joinForm.getEmail(), joinForm.getNickname());
         return "redirect:/";
     }
-
     @GetMapping("/login")
     public String showLogin(){
         return "/member/login";
