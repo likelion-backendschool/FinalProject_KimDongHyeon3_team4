@@ -10,7 +10,7 @@
 <main layout:fragment="main">
     <section class="section section-join flex-grow flex flex-col items-center justify-center">
 
-        <div class="max-w-md w-full px-2 pt-4">
+        <div class="max-w-5xl w-full px-2 pt-4">
             <h1 class="font-bold text-lg">글 수정</h1>
 
             <script th:inline="javascript">
@@ -33,6 +33,11 @@
                         form.subject.focus();
                         return;
                     }
+
+                    const editor = $(form).find(".toast-ui-editor").data("data-toast-editor");
+                    const markdown = editor.getMarkdown();
+                    console.log(markdown);
+                    form.content.value = markdown.trim();
 
                     if (form.content.value.length == 0) {
                         warningModal("내용을 입력해주세요.");
@@ -65,10 +70,11 @@
                     <label class="label">
                         <span class="label-text">내용</span>
                     </label>
-                    <textarea class="form-control block w-full px-3 py-1.5 text-base font-normal text-gray-700 bg-white bg-clip-padding border border-solid border-gray-300
-                                    rounded transition ease-in-out m-0 focus:text-gray-700 focus:bg-white focus:border-blue-600 focus:outline-none"
-                              id="exampleFormControlTextarea1" th:text="${post.content}"
-                              rows="3" name="content" placeholder="내용"></textarea>
+<!--                    <textarea class="form-control block w-full px-3 py-1.5 text-base font-normal text-gray-700 bg-white bg-clip-padding border border-solid border-gray-300-->
+<!--                                    rounded transition ease-in-out m-0 focus:text-gray-700 focus:bg-white focus:border-blue-600 focus:outline-none"-->
+<!--                              id="exampleFormControlTextarea1" th:text="${post.content}"-->
+<!--                              rows="3" name="content" placeholder="내용"></textarea>-->
+                    <div class="toast-ui-editor" th:text="${post.content}" toast-ui-editor--height="700px" toast-ui-editor--placeholder="내용을 입력해주세요." value=""></div>
                 </div>
 
                 <input name='tags' placeholder='write some tags'/>

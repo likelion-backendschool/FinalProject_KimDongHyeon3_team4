@@ -13,7 +13,13 @@
 
         <div class="card my-3">
             <div>
-                <div th:utext="${@markDown.markdownWrite(post.content)}" ></div>
+                <div class="toast-ui-viewer">
+                    <script type="text/x-template">
+                        [[${post.content}]]
+                    </script>
+                </div>
+
+<!--                <div th:utext="${@markDown.markdownWrite(post.content)}" ></div>-->
 
                 <div class="flex flex-col">
                     <label th:if="${post.modifyDate != null}" class="label">
