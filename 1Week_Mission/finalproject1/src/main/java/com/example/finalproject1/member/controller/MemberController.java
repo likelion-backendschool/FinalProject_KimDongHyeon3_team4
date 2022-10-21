@@ -114,13 +114,41 @@ public class MemberController {
     @PostMapping("/findUsername")
     public String findUsername(String email){
 
-        Optional<Member> member = Optional.ofNullable(memberService.findByEmail(email));
+        Member member = memberService.findByEmail(email);
 
-        if(!member.isPresent()){
+        if(member == null){
             return "redirect:/member/findUsername?msg=" + Util.url.encode("등록된 아이디가 없습니다.");
         }
 
-        return "redirect:/member/findUsername?msg=" + member.get().getUsername();
+        return "redirect:/member/findUsername?msg=" + member.getUsername();
+    }
+
+    @GetMapping("/findPassword")
+    public String showFindPassword(){
+        return "/member/findPassword";
+    }
+
+    @PostMapping("/findPassword")
+    public String findPassword(String username, String email){
+
+        Member member = memberService.findByUsername(username);
+
+        if(member == null){
+            return "redirect:/member/findPassword?msg=" + Util.url.encode("등록된 아이디가 없습니다.");
+        }
+
+        if(!member.getEmail().equals(email)){
+            return "redirect:/member/findPassword?msg=" + Util.url.encode("등록된 이메일 없습니다.");
+        }
+
+        String newPassword = UUID.randomUUID().toString().replaceAll("-","").substring(0,6);
+        member.setPassword(passwordEncoder.encode(newPassword));
+
+        memberService.save(member);
+
+        memberService.sendEmail(member.getEmail(), "[e-book market] 임시비밀번호",newPassword);
+
+        return "redirect:/member/login?msg=" + Util.url.encode("임시 비밀번호가 메일로 발송되었습니다.");
     }
 
     @PostMapping("/verifyEmail")
@@ -162,6 +190,7 @@ public class MemberController {
         UsernamePasswordAuthenticationToken newAuth = new UsernamePasswordAuthenticationToken(newPrincipal, currentAuth.getCredentials(), newPrincipal.getAuthorities());
         newAuth.setDetails(currentAuth.getDetails());
         return newAuth;
+
     }
 
 }

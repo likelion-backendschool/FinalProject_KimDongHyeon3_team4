@@ -26,11 +26,7 @@ public class MemberService {
 
         memberRepository.save(member);
 
-        SimpleMailMessage emailMessage = new SimpleMailMessage();
-        emailMessage.setTo(email);
-        emailMessage.setText("가입을 축하합니다.");
-        emailMessage.setSubject("서비스 가입을 완료하였습니다.");
-        javaMailSender.send(emailMessage);
+        sendEmail(email, "[e-book market] 가입을 축하합니다.","서비스 가입을 완료하였습니다.");
     }
 
     public void save(Member member) {
@@ -46,12 +42,15 @@ public class MemberService {
     }
 
     public void verifyEmail(String email, String authKey) {
+        sendEmail(email, "[e-book market] 이메일 인증 코드",authKey);
+    }
 
+    public void sendEmail(String email, String subject, String content){
         SimpleMailMessage emailMessage = new SimpleMailMessage();
         emailMessage.setTo(email);
-        emailMessage.setText(authKey);
-        emailMessage.setSubject("[e-book market] 이메일 인증 코드");
+        emailMessage.setText(content);
+        emailMessage.setSubject(subject);
         javaMailSender.send(emailMessage);
-
     }
+
 }
