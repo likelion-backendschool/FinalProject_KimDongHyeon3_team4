@@ -8,19 +8,23 @@ import com.example.finalproject1.security.service.SecurityMemberService;
 import com.example.finalproject1.util.Util;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
 import java.security.Principal;
+import java.util.HashMap;
+import java.util.Objects;
 import java.util.Optional;
+import java.util.UUID;
 
 @Controller
 @RequestMapping("/member")
@@ -117,6 +121,39 @@ public class MemberController {
         }
 
         return "redirect:/member/findUsername?msg=" + member.get().getUsername();
+    }
+
+    @PostMapping("/verifyEmail")
+    public ResponseEntity<String> verifyEmail(HttpSession session, @RequestBody HashMap<String, String> email){
+
+        String authKey = UUID.randomUUID().toString().replaceAll("-","").substring(0,6);
+
+        memberService.verifyEmail(email.get("email"), authKey);
+
+        session.setAttribute("authKey", authKey);
+        session.setMaxInactiveInterval(5*60);
+
+        return new ResponseEntity<>("Success",HttpStatus.OK);
+    }
+
+    @PostMapping("/verifyEmailCode")
+    public ResponseEntity<String> verifyEmailCode(HttpSession session, @RequestBody HashMap<String, String> code){
+
+        String authKey = (String)session.getAttribute("authKey");
+
+        System.out.println("authKey = " + authKey);
+
+        if(authKey == null){
+            return new ResponseEntity<>("Success",HttpStatus.REQUEST_TIMEOUT);
+        }
+
+        if(!authKey.equals(code.get("code"))){
+            return new ResponseEntity<>("Success",HttpStatus.NOT_FOUND);
+        }
+
+        session.setMaxInactiveInterval(0);
+
+        return new ResponseEntity<>("Success",HttpStatus.OK);
     }
 
     protected Authentication createNewAuthentication(Authentication currentAuth, String username) {

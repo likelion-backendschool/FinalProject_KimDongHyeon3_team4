@@ -13,9 +13,17 @@
             <h1 class="font-bold text-lg">회원가입</h1>
 
             <script>
+                let VerifyEmailCh = false;
                 let MemberJoin__submitDone = false;
 
                 function MemberJoin__submit(form) {
+
+                    if(!VerifyEmailCh){
+                        warningModal("인증 코드 확인을 해주세요");
+                        form.email.focus();
+                        return;
+                    }
+
                     if (MemberJoin__submitDone) {
                         return;
                     }
@@ -51,6 +59,68 @@
                     form.submit();
                     MemberJoin__submitDone = true;
                 }
+
+                function VerifyEmail(){
+
+                    var email = document.querySelector("input[name=email]");
+
+                    if(email.value.length == 0 ){
+                        warningModal("이메일 입력해주세요.");
+                        email.focus();
+                        return;
+                    }
+
+                    fetch("http://localhost:8080/member/verifyEmail", {
+                        method: "POST",
+                        headers: {
+                            "Content-Type": "application/json",
+                        },
+                        body: JSON.stringify({
+                            email: email.value,
+                        }),
+                    }).then((response) => {
+                        console.log(response.status)
+                            if(response.status == 200) {
+                                successModal("인증 코드를 발송하였습니다.");
+                            }else{
+                                warningModal("이메일 정보가 옳바르지 않습니다.");
+                            }
+                        }
+                    );
+
+                }
+
+                function VerifyEmailCode(){
+                    var code = document.querySelector("input[name=code]");
+
+                    if(code.value.length == 0 ){
+                        warningModal("인증코드 입력해주세요.");
+                        code.focus();
+                        return;
+                    }
+
+                    fetch("http://localhost:8080/member/verifyEmailCode", {
+                        method: "POST",
+                        headers: {
+                            "Content-Type": "application/json",
+                        },
+                        body: JSON.stringify({
+                            code: code.value,
+                        }),
+                    }).then((response) => {
+                        console.log(response.status)
+                        if(response.status == 200) {
+                            successModal("인증 코드가 확인되었습니다.");
+                            VerifyEmailCh=true;
+                        }else if(response.status == 408){
+                            warningModal("인증 코드 확인 시간이 종료되었습니다. 다시 시도해 주세요");
+                        }else{
+                            warningModal("인증 코드가 일치하지 않습니다.");
+                        }
+                    }
+                    );
+
+                }
             </script>
 
             <form th:action method="POST" class="flex flex-col gap-3"
@@ -84,6 +154,15 @@
                         <span class="label-text">이메일</span>
                     </label>
                     <input type="email" name="email" placeholder="이메일" class="input input-bordered" maxlength="50">
+                    <input class="btn btn-primary" type="button" onclick="VerifyEmail()" value="인증 코드 보내기">
+                </div>
+
+                <div class="form-control">
+                    <label class="label">
+                        <span class="label-text">인증 코드</span>
+                    </label>
+                    <input type="text" name="code" placeholder="인증코드" class="input input-bordered" maxlength="50">
+                    <input class="btn btn-primary" type="button" onclick="VerifyEmailCode()" value="인증 코드 인증">
                 </div>
 
                 <div class="form-control">

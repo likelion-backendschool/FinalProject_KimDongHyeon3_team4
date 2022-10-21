@@ -44,4 +44,14 @@ public class MemberService {
     public Member findByEmail(String email) {
         return memberRepository.findByEmail(email);
     }
+
+    public void verifyEmail(String email, String authKey) {
+
+        SimpleMailMessage emailMessage = new SimpleMailMessage();
+        emailMessage.setTo(email);
+        emailMessage.setText(authKey);
+        emailMessage.setSubject("[e-book market] 이메일 인증 코드");
+        javaMailSender.send(emailMessage);
+
+    }
 }
