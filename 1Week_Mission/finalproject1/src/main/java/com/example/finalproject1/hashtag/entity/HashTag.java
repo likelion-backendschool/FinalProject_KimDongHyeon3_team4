@@ -16,7 +16,7 @@ import java.time.LocalDateTime;
 @Getter
 @AllArgsConstructor
 @NoArgsConstructor
-@SuperBuilder
+@Builder
 @ToString(callSuper = true)
 @EntityListeners(AuditingEntityListener.class)
 public class HashTag{

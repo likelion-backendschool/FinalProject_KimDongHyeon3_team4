@@ -49,15 +49,15 @@ public class PostController {
     @GetMapping("/{id}")
     public String showPostDetail(@PathVariable Long id, Model model){
 
-        Optional<Post> post = postService.findById(id);
+        Post post = postService.findById(id);
 
-        if(!post.isPresent()){
+        if(post == null){
             return "redirect:/post/list?msg=" + Util.url.encode("해당 글이 존재하지 않습니다.");
         }
 
-        List<Keyword> hashtags = hashTagService.findByPost(post.get());
+        List<Keyword> hashtags = hashTagService.findByPost(post);
 
-        model.addAttribute("post",post.get());
+        model.addAttribute("post",post);
         model.addAttribute("hashtags",hashtags);
 
         return "/post/detail";
@@ -70,9 +70,6 @@ public class PostController {
 
     @PostMapping("/write")
     public String postWrite(String subject, String content, String tags, Principal principal){
-
-
-        System.out.println("tags = " + tags);
 
         Member member = memberService.findByUsername(principal.getName());
 
@@ -93,15 +90,15 @@ public class PostController {
     @GetMapping("/{id}/modify")
     public String showPostModify(@PathVariable Long id, Model model){
 
-        Optional<Post> post = postService.findById(id);
+        Post post = postService.findById(id);
 
-        if(!post.isPresent()){
+        if(post == null){
             return "redirect:/post/list?msg=" + Util.url.encode("해당 글이 존재하지 않습니다.");
         }
 
-        List<Keyword> hashtags = hashTagService.findByPost(post.get());
+        List<Keyword> hashtags = hashTagService.findByPost(post);
 
-        model.addAttribute("post", post.get());
+        model.addAttribute("post", post);
         model.addAttribute("hashtags",hashtags);
 
         return "/post/modify";
@@ -110,13 +107,13 @@ public class PostController {
     @PostMapping("/{id}/modify")
     public String postModify(@PathVariable Long id, String subject, String content, String tags){
 
-        Optional<Post> post = postService.findById(id);
+        Post post = postService.findById(id);
 
-        if(!post.isPresent()){
+        if(post == null){
             return "redirect:/post/list?msg=" + Util.url.encode("해당 글이 존재하지 않습니다.");
         }
 
-        postService.save(subject, content, post.get(), tags);
+        postService.save(subject, content, post, tags);
 
         return "redirect:/post/" + id;
     }

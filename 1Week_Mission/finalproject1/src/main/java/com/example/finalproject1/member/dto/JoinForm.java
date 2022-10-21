@@ -6,6 +6,7 @@ import javax.validation.constraints.NotEmpty;
 
 @Data
 public class JoinForm {
+    
     @NotEmpty
     private String username;
     @NotEmpty
@@ -13,4 +14,5 @@ public class JoinForm {
     @NotEmpty
     private String email;
     private String nickname;
+
 }
