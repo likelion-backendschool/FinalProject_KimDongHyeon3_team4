@@ -75,4 +75,27 @@ public class ProductController {
 
         return "redirect:/product/list";
     }
+
+    @GetMapping("/{id}/modify")
+    public String showProductModify(@PathVariable Long id, Model model){
+
+        Product product = productService.findById(id);
+
+        if(product == null){
+            return "redirect:/product/list?msg=" + Util.url.encode("해당 도서가 존재하지 않습니다.");
+        }
+
+        model.addAttribute("product", product);
+
+        return "product/modify";
+    }
+
+    @PostMapping("/{id}/modify")
+    public String productModify(@PathVariable Long id, ProductForm productForm){
+
+        Product product = productService.findById(id);
+        productService.save(product, productForm.getSubject(), productForm.getPrice());
+
+        return "redirect:/product/" + id;
+    }
 }

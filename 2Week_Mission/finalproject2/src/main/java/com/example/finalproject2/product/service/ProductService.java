@@ -28,7 +28,15 @@ public class ProductService {
                 .build());
     }
 
+    public void save(Product product, String subject, int price) {
+        product.setSubject(subject);
+        product.setPrice(price);
+        productRepository.save(product);
+    }
+
     public Product findById(Long id) {
         return productRepository.findById(id).orElse(null);
     }
+
+
 }
