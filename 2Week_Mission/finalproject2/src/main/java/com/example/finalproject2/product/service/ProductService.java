@@ -27,4 +27,8 @@ public class ProductService {
                 .price(price)
                 .build());
     }
+
+    public Product findById(Long id) {
+        return productRepository.findById(id).orElse(null);
+    }
 }
