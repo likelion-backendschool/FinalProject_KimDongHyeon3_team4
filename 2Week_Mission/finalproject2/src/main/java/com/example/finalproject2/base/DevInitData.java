@@ -68,6 +68,8 @@ public class DevInitData {
            Keyword keyword2 = keywordService.findByContent("파이썬");
            Keyword keyword3 = keywordService.findByContent("C언어");
            Keyword keyword4 = keywordService.findByContent("프로그래밍");
+           Keyword keyword5 = keywordService.findByContent("배고파");
+           Keyword keyword6 = keywordService.findByContent("블로그");
 
            productRepository.save(Product.builder()
                            .author(member1)
@@ -97,13 +99,25 @@ public class DevInitData {
                     .price(400)
                     .build());
 
+            productRepository.save(Product.builder()
+                    .author(member2)
+                    .keyword(keyword5)
+                    .subject("도서5")
+                    .price(300)
+                    .build());
+
+            productRepository.save(Product.builder()
+                    .author(member2)
+                    .keyword(keyword6)
+                    .subject("도서6")
+                    .price(400)
+                    .build());
+
             Product product2 = productRepository.findById(2L).orElse(null);
             Product product4 = productRepository.findById(4L).orElse(null);
 
             cartService.save(member1, product2);
             cartService.save(member1, product4);
-
-
         };
     }
 

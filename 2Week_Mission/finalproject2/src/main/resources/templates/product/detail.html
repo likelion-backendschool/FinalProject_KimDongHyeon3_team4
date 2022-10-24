@@ -46,6 +46,12 @@
                        th:if="${product.author != null and #authentication.getPrincipal().getUsername() != product.author.username}"
                        th:text="구매"></a>
 
+                    <a th:href="@{|/cart/add/${product.id}|}"
+                       class="btn btn-sm btn-outline-secondary"
+                       sec:authorize="isAuthenticated()"
+                       th:if="${product.author != null and #authentication.getPrincipal().getUsername() != product.author.username}"
+                       th:text="장바구니"></a>
+
                     <a th:href="@{|/product/${product.id}/modify|}"
                        class="btn btn-sm btn-outline-secondary"
                        sec:authorize="isAuthenticated()"
