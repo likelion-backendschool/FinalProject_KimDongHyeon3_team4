@@ -1,5 +1,6 @@
 package com.example.finalproject2.base;
 
+import com.example.finalproject2.cart.service.CartService;
 import com.example.finalproject2.keyword.entity.Keyword;
 import com.example.finalproject2.keyword.service.KeywordService;
 import com.example.finalproject2.member.entity.Member;
@@ -28,7 +29,8 @@ public class DevInitData {
                            PostRepository postRepository,
                            PostService postService,
                            KeywordService keywordService,
-                           ProductRepository productRepository) {
+                           ProductRepository productRepository,
+                           CartService cartService) {
         return args -> {
             memberRepository.save(Member.builder()
                     .username("admin")
@@ -94,6 +96,14 @@ public class DevInitData {
                     .subject("도서4")
                     .price(400)
                     .build());
+
+            Product product2 = productRepository.findById(2L).orElse(null);
+            Product product4 = productRepository.findById(4L).orElse(null);
+
+            cartService.save(member1, product2);
+            cartService.save(member1, product4);
+
+
         };
     }
 

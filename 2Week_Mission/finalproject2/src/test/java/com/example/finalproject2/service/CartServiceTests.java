@@ -42,10 +42,10 @@ public class CartServiceTests {
         Product product3 = productService.findById(3L);
         Product product4 = productService.findById(4L);
 
-        CartItem cartItem1 = cartService.addItem(buyer, product1);
-        CartItem cartItem2 = cartService.addItem(buyer, product2);
-        CartItem cartItem3 = cartService.addItem(buyer, product3);
-        CartItem cartItem4 = cartService.addItem(buyer, product4);
+        CartItem cartItem1 = cartService.save(buyer, product1);
+        CartItem cartItem2 = cartService.save(buyer, product2);
+        CartItem cartItem3 = cartService.save(buyer, product3);
+        CartItem cartItem4 = cartService.save(buyer, product4);
 
         assertThat(cartItem1).isNotNull();
         assertThat(cartItem2).isNotNull();
@@ -64,10 +64,10 @@ public class CartServiceTests {
         Product product3 = productService.findById(3L);
         Product product4 = productService.findById(4L);
 
-        cartService.removeItem(buyer1, product1);
-        cartService.removeItem(buyer1, product2);
-        cartService.removeItem(buyer2, product3);
-        cartService.removeItem(buyer2, product4);
+        cartService.delete(buyer1, product1);
+        cartService.delete(buyer1, product2);
+        cartService.delete(buyer2, product3);
+        cartService.delete(buyer2, product4);
 
         assertThat(cartService.hasItem(buyer1, product1)).isFalse();
         assertThat(cartService.hasItem(buyer1, product1)).isFalse();

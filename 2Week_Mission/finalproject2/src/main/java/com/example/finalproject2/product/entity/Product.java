@@ -39,4 +39,8 @@ public class Product {
 
     @LastModifiedDate
     private LocalDateTime modifyDate;
+
+    public String getJdenticon() {
+        return "product__" + getId();
+    }
 }
