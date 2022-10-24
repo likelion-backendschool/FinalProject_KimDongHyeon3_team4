@@ -73,7 +73,7 @@ public class ProductController {
 
         productService.save(member, keyword, productForm.getSubject(), productForm.getPrice());
 
-        return "redirect:/product/list" + Util.url.encode("도서를 작성하였습니다.");
+        return "redirect:/product/list?msg=" + Util.url.encode("도서를 작성하였습니다.");
     }
 
     @GetMapping("/{id}/modify")

@@ -17,9 +17,9 @@ import org.springframework.context.annotation.Profile;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
 @Configuration
-@Profile("dev")
+@Profile("test")
 @RequiredArgsConstructor
-public class DevInitData {
+public class TestInitData {
 
     private final PasswordEncoder passwordEncoder;
 
@@ -30,6 +30,7 @@ public class DevInitData {
                            KeywordService keywordService,
                            ProductRepository productRepository) {
         return args -> {
+
             memberRepository.save(Member.builder()
                     .username("admin")
                     .password(passwordEncoder.encode("1111"))
@@ -57,22 +58,22 @@ public class DevInitData {
             Member member1 = memberRepository.findByUsername("user1");
             Member member2 = memberRepository.findByUsername("user2");
 
-           postService.save("제목1","내용1", member1, "#C언어 #블로그");
-           postService.save("제목2","내용2", member2, "#인프라 #뭐할까");
-           postService.save("제목3","내용3", member1, "#자바 #배고파");
-           postService.save("제목4","내용4", member2, "#파이썬 #프로그래밍");
+            postService.save("제목1","내용1", member1, "#C언어 #블로그");
+            postService.save("제목2","내용2", member2, "#인프라 #뭐할까");
+            postService.save("제목3","내용3", member1, "#자바 #배고파");
+            postService.save("제목4","내용4", member2, "#파이썬 #프로그래밍");
 
-           Keyword keyword1 = keywordService.findByContent("자바");
-           Keyword keyword2 = keywordService.findByContent("파이썬");
-           Keyword keyword3 = keywordService.findByContent("C언어");
-           Keyword keyword4 = keywordService.findByContent("프로그래밍");
+            Keyword keyword1 = keywordService.findByContent("자바");
+            Keyword keyword2 = keywordService.findByContent("파이썬");
+            Keyword keyword3 = keywordService.findByContent("C언어");
+            Keyword keyword4 = keywordService.findByContent("프로그래밍");
 
-           productRepository.save(Product.builder()
-                           .author(member1)
-                           .keyword(keyword1)
-                           .subject("도서1")
-                           .price(100)
-                           .build());
+            productRepository.save(Product.builder()
+                    .author(member1)
+                    .keyword(keyword1)
+                    .subject("도서1")
+                    .price(100)
+                    .build());
 
             productRepository.save(Product.builder()
                     .author(member2)
