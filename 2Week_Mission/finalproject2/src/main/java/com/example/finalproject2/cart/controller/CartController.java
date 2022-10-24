@@ -47,6 +47,10 @@ public class CartController {
 
         Product product = productService.findById(productId);
 
+        if(cartService.hasItem(securityMember.getMember(), product)){
+            return "redirect:/product/" + productId + "?errorMsg=" + Util.url.encode(productId + "번의 상품은 이미 장바구니에 추가되어 있습니다.");
+        }
+
         cartService.save(securityMember.getMember(), product);
 
         return "redirect:/product/" + productId + "?msg=" + Util.url.encode(productId + "번의 상품이 장바구니에 추가되었습니다.");
