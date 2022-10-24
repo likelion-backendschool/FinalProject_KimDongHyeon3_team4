@@ -12,18 +12,39 @@
         <div class="px-2 pt-4">
             <h1 class="font-bold text-lg">장바구니</h1>
 
-            <ul>
-                <li th:each="cartItem : ${cartItems}" class="flex items-center">
-                    <svg width="80" height="80" th:data-jdenticon-value="${cartItem.product.jdenticon}"></svg>
-                    <div>
-                        <span th:text="${cartItem.product.author.username}"></span> <span
-                            th:text="${cartItem.product.subject}"></span> <span th:text="${cartItem.product.price}"></span>
-                    </div>
-                    </span>
-                </li>
-            </ul>
+            <table class="table">
+                <thead class="table-dark">
+                <tr class="text-center">
+                    <th>번호</th>
+                    <th>이미지</th>
+                    <th style="width:50%">도서명</th>
+                    <th>글쓴이</th>
+                    <th>가격</th>
+                    <th>제거</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr class="text-center" th:each="cartItem, loop : ${cartItems}">
+                    <td th:text="${cartItem.id}"></td>
 
-        </div>
+                    <td>
+                        <svg width="80" height="80" th:data-jdenticon-value="${cartItem.product.jdenticon}"></svg>
+                    </td>
+
+                    <td class="text-start">
+                        <a th:href="@{|/product/${cartItem.product.id}|}" th:text="${cartItem.product.subject}"></a>
+                    </td>
+
+                    <td><span th:if="${cartItem.product.author != null}" th:text="${cartItem.product.author.username}"></span></td>
+
+                    <td><span th:text="${cartItem.product.price}"></span></td>
+
+                    <td>
+                        <a th:href="@{|/cart/remove/${cartItem.product.id}|}" class="btn btn-warning btn-outline btn-sm">제거</a>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
 
         </div>
 

@@ -19,6 +19,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import java.security.Principal;
+import java.util.Arrays;
 import java.util.List;
 
 @Controller
@@ -49,5 +50,16 @@ public class CartController {
         cartService.save(securityMember.getMember(), product);
 
         return "redirect:/product/" + productId + "?msg=" + Util.url.encode(productId + "번의 상품이 장바구니에 추가되었습니다.");
+    }
+
+    @GetMapping("/remove/{productId}")
+    public String removeItems(@AuthenticationPrincipal SecurityMember securityMember, @PathVariable Long productId) {
+        Member buyer = securityMember.getMember();
+
+        Product product = productService.findById(productId);
+
+        cartService.delete(buyer, product);
+
+        return "redirect:/cart/list?msg=" + Util.url.encode("%d번의 품목을 삭제하였습니다.".formatted(productId));
     }
 }

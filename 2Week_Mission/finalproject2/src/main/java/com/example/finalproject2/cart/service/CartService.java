@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -36,23 +37,25 @@ public class CartService {
 
     @Transactional
     public boolean delete(Member buyer, Product product) {
-        CartItem oldCartItem = cartItemRepository.findByBuyerIdAndProductId(buyer.getId(), product.getId()).orElse(null);
+        CartItem cartItem = cartItemRepository.findByBuyerIdAndProductId(buyer.getId(), product.getId()).orElse(null);
 
-        if (oldCartItem != null) {
-            cartItemRepository.delete(oldCartItem);
+        if (cartItem != null) {
+            cartItemRepository.delete(cartItem);
             return true;
         }
 
         return false;
     }
 
+    public void delete(CartItem cartItem) {
+        cartItemRepository.delete(cartItem);
+    }
+
     public boolean hasItem(Member buyer, Product product) {
         return cartItemRepository.existsByBuyerIdAndProductId(buyer.getId(), product.getId());
     }
 
-
     public List<CartItem> findByBuyer(Member buyer) {
         return cartItemRepository.findByBuyer(buyer);
     }
-
 }
