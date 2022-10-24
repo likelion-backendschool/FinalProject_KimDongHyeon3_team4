@@ -73,7 +73,7 @@ public class ProductController {
 
         productService.save(member, keyword, productForm.getSubject(), productForm.getPrice());
 
-        return "redirect:/product/list";
+        return "redirect:/product/list" + Util.url.encode("도서를 작성하였습니다.");
     }
 
     @GetMapping("/{id}/modify")
@@ -96,6 +96,14 @@ public class ProductController {
         Product product = productService.findById(id);
         productService.save(product, productForm.getSubject(), productForm.getPrice());
 
-        return "redirect:/product/" + id;
+        return "redirect:/product/" + Util.url.encode(id + "도서를 수정하였습니다.");
+    }
+
+    @GetMapping("/{id}/delete")
+    public String productDelete(@PathVariable Long id){
+
+        productService.deleteById(id);
+
+        return "redirect:/product/list?msg=" + Util.url.encode(id + "도서가 삭제되었습니다.");
     }
 }
