@@ -1,8 +1,8 @@
-package com.example.finalproject2.keyword.entity;
+package com.example.finalproject2.product.entity;
 
-
+import com.example.finalproject2.keyword.entity.Keyword;
+import com.example.finalproject2.member.entity.Member;
 import lombok.*;
-import lombok.experimental.SuperBuilder;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
@@ -10,26 +10,33 @@ import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 import javax.persistence.*;
 import java.time.LocalDateTime;
 
-
 @Entity
-@Setter
+@Builder
 @Getter
+@Setter
 @AllArgsConstructor
 @NoArgsConstructor
-@Builder
-@ToString(callSuper = true)
 @EntityListeners(AuditingEntityListener.class)
-public class Keyword {
+public class Product {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     Long id;
+
+    @ManyToOne
+    Member author;
+
+    @ManyToOne
+    Keyword keyword;
+
+    @Column
+    String subject;
+
+    @Column
+    int price;
 
     @CreatedDate
     private LocalDateTime createDate;
 
     @LastModifiedDate
     private LocalDateTime modifyDate;
-
-    @Column
-    private String content;
 }

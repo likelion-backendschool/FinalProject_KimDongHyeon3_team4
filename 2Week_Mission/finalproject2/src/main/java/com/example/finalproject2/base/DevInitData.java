@@ -1,10 +1,14 @@
 package com.example.finalproject2.base;
 
+import com.example.finalproject2.keyword.entity.Keyword;
+import com.example.finalproject2.keyword.service.KeywordService;
 import com.example.finalproject2.member.entity.Member;
 import com.example.finalproject2.member.repository.MemberRepository;
 import com.example.finalproject2.post.entity.Post;
 import com.example.finalproject2.post.repository.PostRepository;
 import com.example.finalproject2.post.service.PostService;
+import com.example.finalproject2.product.entity.Product;
+import com.example.finalproject2.product.repository.ProductRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Bean;
@@ -20,7 +24,11 @@ public class DevInitData {
     private final PasswordEncoder passwordEncoder;
 
     @Bean
-    CommandLineRunner init(MemberRepository memberRepository, PostRepository postRepository, PostService postService) {
+    CommandLineRunner init(MemberRepository memberRepository,
+                           PostRepository postRepository,
+                           PostService postService,
+                           KeywordService keywordService,
+                           ProductRepository productRepository) {
         return args -> {
             memberRepository.save(Member.builder()
                     .username("admin")
@@ -65,6 +73,23 @@ public class DevInitData {
 
            postService.save("제목3","내용3", member1, "#자바 #프로그래밍");
            postService.save("제목4","내용4", member2, "#파이썬 #프로그래밍");
+
+           Keyword keyword1 = keywordService.findByContent("자바");
+           Keyword keyword2 = keywordService.findByContent("파이썬");
+
+           productRepository.save(Product.builder()
+                           .author(member1)
+                           .keyword(keyword1)
+                           .subject("도서1")
+                           .price(100)
+                           .build());
+
+            productRepository.save(Product.builder()
+                    .author(member2)
+                    .keyword(keyword2)
+                    .subject("도서2")
+                    .price(100)
+                    .build());
         };
     }
 

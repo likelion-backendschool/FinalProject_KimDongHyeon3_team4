@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html layout:decorate="~{layout/layout.html}">
+
+<head>
+    <title>도서 리스트</title>
+</head>
+
+<body>
+<main layout:fragment="main">
+    <section class="section section-join flex-grow flex flex-col items-center justify-center">
+
+        <div class="row my-3">
+            <div class="col-6">
+                <a th:href="@{/product/write}" class="btn btn-primary">도서 작성</a>
+            </div>
+        </div>
+
+        <table class="table">
+            <thead class="table-dark">
+            <tr class="text-center">
+                <th>번호</th>
+                <th style="width:50%">도서명</th>
+                <th>글쓴이</th>
+                <th>가격</th>
+                <th>작성일시</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr class="text-center" th:each="product, loop : ${products}">
+                <td th:text="${product.id}"></td>
+                <td class="text-start">
+                    <a th:href="@{|/product/${product.id}|}" th:text="${product.subject}"></a>
+                </td>
+                <td><span th:if="${product.author != null}" th:text="${product.author.username}"></span></td>
+                <td><span th:text="${product.price}"></span></td>
+                <td th:text="${#temporals.format(product.createDate, 'yy-MM-dd HH:mm')}"></td>
+            </tr>
+            </tbody>
+        </table>
+
+    </section>
+</main>
+</body>
+</html>

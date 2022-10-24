@@ -33,4 +33,8 @@ public class KeywordService {
     public List<Keyword> findAll() {
         return keywordRepository.findAll();
     }
+
+    public Keyword findByContent(String content) {
+        return keywordRepository.findByContent(content).orElse(null);
+    }
 }
