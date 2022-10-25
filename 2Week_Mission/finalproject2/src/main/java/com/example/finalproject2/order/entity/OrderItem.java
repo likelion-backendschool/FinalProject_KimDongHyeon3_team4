@@ -39,9 +39,27 @@ public class OrderItem {
     @Column
     private int wholesalePrice; //도매가
 
+    @Column
+    private int payPrice; // 실제 결제 가격 (이벤트, 쿠폰으로 가격이 salePrice가 아닐 수 있다.)
+
+    @Column
+    private int refundPrice; // 환불 가격 (이벤트, 쿠폰으로 가격이 바뀌었으면, 실제 결제 금액만 환불해줘야된다.)
+
+    @Column
+    private int pgFee; // 결제 대행사 수수료
+
+    @Column
+    private boolean isPaid; // 결제여부
+
     @CreatedDate
     private LocalDateTime createDate;
 
     @LastModifiedDate
     private LocalDateTime modifyDate;
+
+    public void setPaymentDone() {
+        this.pgFee = 0;
+        this.payPrice = this.getSalePrice();   //쿠폰, 이벤트 적용시 변경되어야됨
+        this.isPaid = true;
+    }
 }

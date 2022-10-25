@@ -6,6 +6,7 @@ import com.example.finalproject2.keyword.service.KeywordService;
 import com.example.finalproject2.member.entity.Member;
 import com.example.finalproject2.member.repository.MemberRepository;
 import com.example.finalproject2.member.service.MemberService;
+import com.example.finalproject2.order.entity.Order;
 import com.example.finalproject2.order.service.OrderService;
 import com.example.finalproject2.post.entity.Post;
 import com.example.finalproject2.post.repository.PostRepository;
@@ -147,7 +148,12 @@ public class DevInitData {
             memberService.addCash(member1, 1_000_000, "충전__무통장입금");
             memberService.addCash(member2, 2_000_000, "충전__무통장입금");
 
-            orderService.createByCart(member1);
+            Order order1 = orderService.createByCart(member1);
+
+            int order1PayPrice = order1.getPayPrice();
+
+            orderService.payByRestCash(order1);    //결제 모듈 없이 예치금으로 바로 결제
+
         };
     }
 

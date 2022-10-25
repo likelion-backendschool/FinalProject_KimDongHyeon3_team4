@@ -60,12 +60,12 @@ public class MemberService {
     @Transactional
     public long addCash(Member member, long changePrice, String eventType) {
 
-        long newDeposit = member.getDeposit() + cashService.addCash(member, changePrice, eventType).getPrice();
+        long newRestCash = member.getRestCash() + cashService.addCash(member, changePrice, eventType).getPrice();
 
-        member.setDeposit(newDeposit);
+        member.setRestCash(newRestCash);
         memberRepository.save(member);
 
-        return newDeposit;
+        return newRestCash;
     }
 
     public long getRestCash(Member member) {

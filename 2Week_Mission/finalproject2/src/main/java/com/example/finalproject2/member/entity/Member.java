@@ -34,7 +34,7 @@ public class Member {
     String nickname;
 
     @Column
-    long deposit;
+    long restCash;
 
     @Column
     int authLevel;

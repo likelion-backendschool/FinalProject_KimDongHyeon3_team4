@@ -43,4 +43,20 @@ public class Order {
 
         orderItems.add(orderItem);
     }
+
+    public int getPayPrice() {
+        int payPrice = 0;
+
+        for ( OrderItem orderItem : orderItems ) {
+            payPrice += orderItem.getSalePrice();   //만약, 쿠폰/이벤트를 적용한다면 SalePrice를 가져오면 안된다. 적용된 값을 가져와야 한다.
+        }
+        return payPrice;
+    }
+
+    public void setPaymentDone() {
+
+        for ( OrderItem orderItem : orderItems ) {
+            orderItem.setPaymentDone();
+        }
+    }
 }

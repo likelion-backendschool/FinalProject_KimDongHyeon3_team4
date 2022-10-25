@@ -38,11 +38,11 @@ public class MemberServiceTests {
 
         memberService.addCash(member, 5_000, "충전__무통장입금");
 
-        assertThat(member.getDeposit()).isEqualTo(1030000);
+        assertThat(member.getRestCash()).isEqualTo(1030000);
 
         memberService.addCash(member, -5_000, "충전__무통장입금");
 
-        assertThat(member.getDeposit()).isEqualTo(1025000);
+        assertThat(member.getRestCash()).isEqualTo(1025000);
     }
 
     @Test
@@ -52,8 +52,8 @@ public class MemberServiceTests {
         Member member1 = memberService.findByUsername("user1");
         Member member2 = memberService.findByUsername("user2");
 
-        assertThat(member1.getDeposit()).isEqualTo(1025000);
-        assertThat(member2.getDeposit()).isEqualTo(2000000);
+        assertThat(member1.getRestCash()).isEqualTo(1025000);
+        assertThat(member2.getRestCash()).isEqualTo(2000000);
     }
 
 }
