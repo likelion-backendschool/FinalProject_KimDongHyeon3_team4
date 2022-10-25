@@ -5,12 +5,14 @@ import com.example.finalproject2.keyword.entity.Keyword;
 import com.example.finalproject2.keyword.service.KeywordService;
 import com.example.finalproject2.member.entity.Member;
 import com.example.finalproject2.member.repository.MemberRepository;
+import com.example.finalproject2.member.service.MemberService;
 import com.example.finalproject2.post.entity.Post;
 import com.example.finalproject2.post.repository.PostRepository;
 import com.example.finalproject2.post.service.PostService;
 import com.example.finalproject2.product.entity.Product;
 import com.example.finalproject2.product.repository.ProductRepository;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -20,12 +22,14 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 @Configuration
 @Profile("dev")
 @RequiredArgsConstructor
+@Slf4j
 public class DevInitData {
 
     private final PasswordEncoder passwordEncoder;
 
     @Bean
     CommandLineRunner init(MemberRepository memberRepository,
+                           MemberService memberService,
                            PostRepository postRepository,
                            PostService postService,
                            KeywordService keywordService,
@@ -118,6 +122,19 @@ public class DevInitData {
 
             cartService.save(member1, product2);
             cartService.save(member1, product4);
+
+            // 만원 충전
+            memberService.addCash(member1, 10_000, "충전__무통장입금");
+            // 이만원 충전
+            memberService.addCash(member1, 20_000, "충전__무통장입금");
+            // 5천원 사용
+            memberService.addCash(member1, -5_000, "출금__일반");
+
+            // 현재 보유중인 캐시 금액
+            long restCash = memberService.getRestCash(member1);
+
+            log.debug("member1 restCash : " + restCash);
+
         };
     }
 

@@ -1,5 +1,6 @@
-package com.example.finalproject2.member.entity;
+package com.example.finalproject2.cash.entity;
 
+import com.example.finalproject2.member.entity.Member;
 import lombok.*;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
@@ -15,29 +16,19 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 @NoArgsConstructor
 @EntityListeners(AuditingEntityListener.class)
-public class Member {
-
+public class CashLog {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     Long id;
 
-    @Column
-    String username;
+    @ManyToOne
+    Member member;
 
     @Column
-    String password;
+    long price;
 
     @Column
-    String email;
-
-    @Column
-    String nickname;
-
-    @Column
-    long deposit;
-
-    @Column
-    int authLevel;
+    String eventType;
 
     @CreatedDate
     private LocalDateTime createDate;

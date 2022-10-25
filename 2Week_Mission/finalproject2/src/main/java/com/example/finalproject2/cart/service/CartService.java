@@ -13,9 +13,8 @@ import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
-@Transactional(readOnly = true)
+@Transactional
 public class CartService {
-
     private final CartItemRepository cartItemRepository;
 
     public CartItem save(Member buyer, Product product) {

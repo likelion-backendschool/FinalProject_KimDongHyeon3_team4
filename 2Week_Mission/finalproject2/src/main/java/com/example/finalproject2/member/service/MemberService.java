@@ -1,5 +1,6 @@
 package com.example.finalproject2.member.service;
 
+import com.example.finalproject2.cash.service.CashService;
 import com.example.finalproject2.member.entity.Member;
 import com.example.finalproject2.member.repository.MemberRepository;
 import lombok.RequiredArgsConstructor;
@@ -14,6 +15,7 @@ public class MemberService {
     private final MemberRepository memberRepository;
     private final PasswordEncoder passwordEncoder;
     private final JavaMailSender javaMailSender;
+    private final CashService cashService;
     public void save(String username, String password, String email, String nickname) {
 
         Member member = Member.builder()
@@ -53,4 +55,16 @@ public class MemberService {
         javaMailSender.send(emailMessage);
     }
 
+    public long addCash(Member member, long changePrice, String eventType) {
+
+        long newDeposit = member.getDeposit() + cashService.addCash(member, changePrice, eventType).getPrice();
+
+        member.setDeposit(newDeposit);
+
+        return newDeposit;
+    }
+
+    public long getRestCash(Member member) {
+        return cashService.getRestCash(member);
+    }
 }
