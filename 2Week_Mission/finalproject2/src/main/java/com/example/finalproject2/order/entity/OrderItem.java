@@ -59,7 +59,11 @@ public class OrderItem {
 
     public void setPaymentDone() {
         this.pgFee = 0;
-        this.payPrice = this.getSalePrice();   //쿠폰, 이벤트 적용시 변경되어야됨
+        this.payPrice = salePrice;   //쿠폰, 이벤트 적용시 변경되어야됨
         this.isPaid = true;
+    }
+
+    public void setRefundDone() {
+        this.refundPrice = payPrice;
     }
 }

@@ -59,4 +59,10 @@ public class Order {
             orderItem.setPaymentDone();
         }
     }
+
+    public void setRefundDone() {
+        for ( OrderItem orderItem : orderItems ) {
+            orderItem.setRefundDone();
+        }
+    }
 }
