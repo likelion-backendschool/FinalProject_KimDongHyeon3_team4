@@ -1,6 +1,5 @@
-package com.example.finalproject2.product.entity;
+package com.example.finalproject2.order.entity;
 
-import com.example.finalproject2.keyword.entity.Keyword;
 import com.example.finalproject2.member.entity.Member;
 import lombok.*;
 import org.springframework.data.annotation.CreatedDate;
@@ -9,6 +8,8 @@ import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Builder
@@ -16,23 +17,20 @@ import java.time.LocalDateTime;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
+@Table(name = "product_order")
 @EntityListeners(AuditingEntityListener.class)
-public class Product {
+public class Order {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     Long id;
 
     @ManyToOne
-    Member author;
+    Member member;
 
-    @ManyToOne
-    Keyword keyword;
-
-    @Column
-    String subject;
-
-    @Column
-    int price;
+    @Builder.Default
+    @OneToMany(mappedBy = "order", orphanRemoval = true, cascade = CascadeType.ALL)
+    private List<OrderItem> orderItems = new ArrayList<>();
 
     @CreatedDate
     private LocalDateTime createDate;
@@ -40,11 +38,9 @@ public class Product {
     @LastModifiedDate
     private LocalDateTime modifyDate;
 
-    public String getJdenticon() {
-        return "product__" + getId();
-    }
+    public void addOrderItem(OrderItem orderItem) {
+        orderItem.setOrder(this);
 
-    public boolean isOrderable() {  //상품 판매가 중지되면, 해당 부분을 수정해줘야한다.
-        return true;
+        orderItems.add(orderItem);
     }
 }

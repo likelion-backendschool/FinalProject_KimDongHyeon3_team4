@@ -6,6 +6,7 @@ import com.example.finalproject2.keyword.service.KeywordService;
 import com.example.finalproject2.member.entity.Member;
 import com.example.finalproject2.member.repository.MemberRepository;
 import com.example.finalproject2.member.service.MemberService;
+import com.example.finalproject2.order.service.OrderService;
 import com.example.finalproject2.post.entity.Post;
 import com.example.finalproject2.post.repository.PostRepository;
 import com.example.finalproject2.post.service.PostService;
@@ -34,7 +35,8 @@ public class DevInitData {
                            PostService postService,
                            KeywordService keywordService,
                            ProductRepository productRepository,
-                           CartService cartService) {
+                           CartService cartService,
+                           OrderService orderService) {
         return args -> {
             memberRepository.save(Member.builder()
                     .username("admin")
@@ -117,11 +119,15 @@ public class DevInitData {
                     .price(400)
                     .build());
 
+            Product product1 = productRepository.findById(1L).orElse(null);
             Product product2 = productRepository.findById(2L).orElse(null);
+            Product product3 = productRepository.findById(3L).orElse(null);
             Product product4 = productRepository.findById(4L).orElse(null);
 
             cartService.save(member1, product2);
             cartService.save(member1, product4);
+            cartService.save(member2, product1);
+            cartService.save(member2, product3);
 
             memberService.addCash(member1, 10_000, "충전__무통장입금");
             memberService.addCash(member1, 20_000, "충전__무통장입금");
@@ -129,7 +135,7 @@ public class DevInitData {
             memberService.addCash(member1, 1_000_000, "충전__무통장입금");
             memberService.addCash(member2, 2_000_000, "충전__무통장입금");
 
-
+            orderService.createByCart(member1);
         };
     }
 
