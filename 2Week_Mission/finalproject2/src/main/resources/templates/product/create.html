@@ -23,8 +23,8 @@
                         return;
                     }
 
-                    form.price.value = form.price.value.trim();
-                    if (form.price.value.length == 0) {
+                    form.salePrice.value = form.salePrice.value.trim();
+                    if (form.salePrice.value.length == 0) {
                         warningModal("가격을 입력해주세요.");
                         form.price.focus();
                         return;
@@ -53,7 +53,7 @@
                     <label class="label">
                         <span class="label-text">가격</span>
                     </label>
-                    <input autofocus type="text" name="price" placeholder="가격" class="input input-bordered" maxlength="50">
+                    <input autofocus type="text" name="salePrice" placeholder="가격" class="input input-bordered" maxlength="50">
                 </div>
 
                 <div class="form-control">

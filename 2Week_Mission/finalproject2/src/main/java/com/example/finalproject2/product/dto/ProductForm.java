@@ -10,6 +10,6 @@ import javax.validation.constraints.NotEmpty;
 public class ProductForm {
 
     String subject;
-    int price;
+    int salePrice;
     String keyword;
 }

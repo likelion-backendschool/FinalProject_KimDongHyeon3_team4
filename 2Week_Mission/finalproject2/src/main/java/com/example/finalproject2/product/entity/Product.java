@@ -32,10 +32,13 @@ public class Product {
     String subject;
 
     @Column
-    int price;
+    int price;  //소비가
 
     @Column
-    int fee;
+    int wholesalePrice; //도매가
+
+    @Column
+    int salePrice;  //판매가
 
     @CreatedDate
     private LocalDateTime createDate;

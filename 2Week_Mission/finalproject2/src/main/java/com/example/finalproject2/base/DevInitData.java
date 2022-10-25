@@ -81,48 +81,54 @@ public class DevInitData {
                            .author(member1)
                            .keyword(keyword1)
                            .subject("도서1")
-                           .price(100)
-                           .fee(10)
+                           .price((int) (100*1.6))
+                           .wholesalePrice((int) (100*0.9))
+                           .salePrice(100)
                            .build());
 
             productRepository.save(Product.builder()
                     .author(member2)
                     .keyword(keyword2)
                     .subject("도서2")
-                    .price(200)
-                    .fee(20)
+                    .price((int) (200*1.6))
+                    .wholesalePrice((int) (200*0.9))
+                    .salePrice(200)
                     .build());
 
             productRepository.save(Product.builder()
                     .author(member1)
                     .keyword(keyword3)
                     .subject("도서3")
-                    .price(300)
-                    .fee(30)
+                    .price((int) (300*1.6))
+                    .wholesalePrice((int) (300*0.9))
+                    .salePrice(300)
                     .build());
 
             productRepository.save(Product.builder()
                     .author(member2)
                     .keyword(keyword4)
                     .subject("도서4")
-                    .price(400)
-                    .fee(40)
+                    .price((int) (400*1.6))
+                    .wholesalePrice((int) (400*0.9))
+                    .salePrice(400)
                     .build());
 
             productRepository.save(Product.builder()
                     .author(member2)
                     .keyword(keyword5)
                     .subject("도서5")
-                    .price(500)
-                    .fee(50)
+                    .price((int) (500*1.6))
+                    .wholesalePrice((int) (500*0.9))
+                    .salePrice(500)
                     .build());
 
             productRepository.save(Product.builder()
                     .author(member2)
                     .keyword(keyword6)
                     .subject("도서6")
-                    .price(600)
-                    .fee(60)
+                    .price((int) (600*1.6))
+                    .wholesalePrice((int) (600*0.9))
+                    .salePrice(600)
                     .build());
 
             Product product1 = productRepository.findById(1L).orElse(null);

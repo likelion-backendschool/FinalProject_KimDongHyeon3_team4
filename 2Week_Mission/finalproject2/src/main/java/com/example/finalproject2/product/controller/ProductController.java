@@ -71,7 +71,7 @@ public class ProductController {
         Member member = memberService.findByUsername(principal.getName());
         Keyword keyword = keywordService.findByContent(productForm.getKeyword());
 
-        productService.save(member, keyword, productForm.getSubject(), productForm.getPrice());
+        productService.save(member, keyword, productForm.getSubject(), productForm.getSalePrice());
 
         return "redirect:/product/list?msg=" + Util.url.encode("도서를 작성하였습니다.");
     }
@@ -94,7 +94,7 @@ public class ProductController {
     public String productModify(@PathVariable Long id, ProductForm productForm){
 
         Product product = productService.findById(id);
-        productService.save(product, productForm.getSubject(), productForm.getPrice());
+        productService.save(product, productForm.getSubject(), productForm.getSalePrice());
 
         return "redirect:/product/" + Util.url.encode(id + "도서를 수정하였습니다.");
     }

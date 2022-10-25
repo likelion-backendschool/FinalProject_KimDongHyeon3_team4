@@ -19,19 +19,22 @@ public class ProductService {
         return productRepository.findAll();
     }
 
-    public void save(Member member, Keyword keyword, String subject, int price) {
+    public void save(Member member, Keyword keyword, String subject, int salePrice) {
         productRepository.save(Product.builder()
                 .author(member)
                 .keyword(keyword)
                 .subject(subject)
-                .price(price)
-                .fee((int)(price*0.1))
+                .price((int)(salePrice*1.6))
+                .wholesalePrice((int)(salePrice*0.9))
+                .salePrice(salePrice)
                 .build());
     }
 
-    public void save(Product product, String subject, int price) {
+    public void save(Product product, String subject, int salePrice) {
         product.setSubject(subject);
-        product.setPrice(price);
+        product.setSalePrice(salePrice);
+        product.setWholesalePrice((int)(salePrice*0.9));
+        product.setPrice((int)(salePrice*1.6));
         productRepository.save(product);
     }
 
