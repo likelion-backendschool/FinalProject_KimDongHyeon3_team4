@@ -4,6 +4,7 @@ import com.example.finalproject2.keyword.entity.Keyword;
 import com.example.finalproject2.keyword.service.KeywordService;
 import com.example.finalproject2.member.entity.Member;
 import com.example.finalproject2.member.repository.MemberRepository;
+import com.example.finalproject2.member.service.MemberService;
 import com.example.finalproject2.post.entity.Post;
 import com.example.finalproject2.post.repository.PostRepository;
 import com.example.finalproject2.post.service.PostService;
@@ -25,6 +26,7 @@ public class TestInitData {
 
     @Bean
     CommandLineRunner init(MemberRepository memberRepository,
+                           MemberService memberService,
                            PostRepository postRepository,
                            PostService postService,
                            KeywordService keywordService,
@@ -95,6 +97,12 @@ public class TestInitData {
                     .subject("도서4")
                     .price(400)
                     .build());
+
+            memberService.addCash(member1, 10_000, "충전__무통장입금");
+            memberService.addCash(member1, 20_000, "충전__무통장입금");
+            memberService.addCash(member1, -5_000, "출금__일반");
+            memberService.addCash(member1, 1_000_000, "충전__무통장입금");
+            memberService.addCash(member2, 2_000_000, "충전__무통장입금");
         };
     }
 

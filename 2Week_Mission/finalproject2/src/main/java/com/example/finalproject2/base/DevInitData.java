@@ -123,17 +123,12 @@ public class DevInitData {
             cartService.save(member1, product2);
             cartService.save(member1, product4);
 
-            // 만원 충전
             memberService.addCash(member1, 10_000, "충전__무통장입금");
-            // 이만원 충전
             memberService.addCash(member1, 20_000, "충전__무통장입금");
-            // 5천원 사용
             memberService.addCash(member1, -5_000, "출금__일반");
+            memberService.addCash(member1, 1_000_000, "충전__무통장입금");
+            memberService.addCash(member2, 2_000_000, "충전__무통장입금");
 
-            // 현재 보유중인 캐시 금액
-            long restCash = memberService.getRestCash(member1);
-
-            log.debug("member1 restCash : " + restCash);
 
         };
     }

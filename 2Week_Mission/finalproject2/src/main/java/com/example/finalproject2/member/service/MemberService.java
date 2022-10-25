@@ -8,9 +8,11 @@ import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
+@Transactional
 public class MemberService {
     private final MemberRepository memberRepository;
     private final PasswordEncoder passwordEncoder;
@@ -55,11 +57,13 @@ public class MemberService {
         javaMailSender.send(emailMessage);
     }
 
+    @Transactional
     public long addCash(Member member, long changePrice, String eventType) {
 
         long newDeposit = member.getDeposit() + cashService.addCash(member, changePrice, eventType).getPrice();
 
         member.setDeposit(newDeposit);
+        memberRepository.save(member);
 
         return newDeposit;
     }
