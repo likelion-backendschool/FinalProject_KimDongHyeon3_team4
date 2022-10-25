@@ -37,6 +37,9 @@ public class OrderService {
             if(product.isOrderable()){
                 orderItems.add(OrderItem.builder()
                         .product(product)
+                        .price(product.getPrice())
+                        .salePrice(product.getSalePrice())
+                        .wholesalePrice(product.getWholesalePrice())
                         .build());
             }
 

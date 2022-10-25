@@ -30,6 +30,15 @@ public class OrderItem {
     @ManyToOne
     private Product product;
 
+    @Column
+    private int price;  //소비가
+
+    @Column
+    private int salePrice;  //판매가
+
+    @Column
+    private int wholesalePrice; //도매가
+
     @CreatedDate
     private LocalDateTime createDate;
 
