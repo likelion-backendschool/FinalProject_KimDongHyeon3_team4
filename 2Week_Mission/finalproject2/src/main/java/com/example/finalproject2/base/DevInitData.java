@@ -82,6 +82,7 @@ public class DevInitData {
                            .keyword(keyword1)
                            .subject("도서1")
                            .price(100)
+                           .fee(10)
                            .build());
 
             productRepository.save(Product.builder()
@@ -89,6 +90,7 @@ public class DevInitData {
                     .keyword(keyword2)
                     .subject("도서2")
                     .price(200)
+                    .fee(20)
                     .build());
 
             productRepository.save(Product.builder()
@@ -96,6 +98,7 @@ public class DevInitData {
                     .keyword(keyword3)
                     .subject("도서3")
                     .price(300)
+                    .fee(30)
                     .build());
 
             productRepository.save(Product.builder()
@@ -103,20 +106,23 @@ public class DevInitData {
                     .keyword(keyword4)
                     .subject("도서4")
                     .price(400)
+                    .fee(40)
                     .build());
 
             productRepository.save(Product.builder()
                     .author(member2)
                     .keyword(keyword5)
                     .subject("도서5")
-                    .price(300)
+                    .price(500)
+                    .fee(50)
                     .build());
 
             productRepository.save(Product.builder()
                     .author(member2)
                     .keyword(keyword6)
                     .subject("도서6")
-                    .price(400)
+                    .price(600)
+                    .fee(60)
                     .build());
 
             Product product1 = productRepository.findById(1L).orElse(null);

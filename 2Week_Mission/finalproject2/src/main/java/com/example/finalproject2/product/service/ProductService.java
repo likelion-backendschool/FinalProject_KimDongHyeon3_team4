@@ -25,6 +25,7 @@ public class ProductService {
                 .keyword(keyword)
                 .subject(subject)
                 .price(price)
+                .fee((int)(price*0.1))
                 .build());
     }
 

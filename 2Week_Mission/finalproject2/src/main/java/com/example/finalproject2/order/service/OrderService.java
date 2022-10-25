@@ -34,8 +34,6 @@ public class OrderService {
 
             Product product = cartItem.getProduct();
 
-            log.info("여기는 ?? = {}", product.getSubject());
-
             if(product.isOrderable()){
                 orderItems.add(OrderItem.builder()
                         .product(product)
@@ -45,21 +43,15 @@ public class OrderService {
             cartService.delete(cartItem);
         }
 
-        for(OrderItem orderItem : orderItems){
-            log.info("반복하면은 ? = {}",orderItem.getProduct().getSubject());
-        }
-
         save(member, orderItems);
     }
 
     private void save(Member member, List<OrderItem> orderItems) {
         Order order = Order.builder()
                 .member(member)
-//                .orderItems(orderItems)
                 .build();
 
         for(OrderItem orderItem : orderItems){
-            log.info("뭐가 나오냐 orderitem아 = {}", orderItem.getProduct().getSubject());
             order.addOrderItem(orderItem);
         }
 

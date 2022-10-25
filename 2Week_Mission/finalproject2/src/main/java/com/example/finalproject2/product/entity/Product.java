@@ -34,6 +34,9 @@ public class Product {
     @Column
     int price;
 
+    @Column
+    int fee;
+
     @CreatedDate
     private LocalDateTime createDate;
 
