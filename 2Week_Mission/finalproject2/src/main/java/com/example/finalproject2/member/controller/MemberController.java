@@ -54,11 +54,11 @@ public class MemberController {
     }
 
     @GetMapping("/profile")
-    public String showProfile(Model model){
-
-
-        return "/member/profile";
-    }
+    public String showProfile(){
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        SecurityMember securityMember = (SecurityMember) authentication.getPrincipal();
+        SecurityContextHolder.getContext().setAuthentication(createNewAuthentication(authentication,securityMember.getUsername()));
+        return "/member/profile";}
 
     @GetMapping("/modify")
     public String showModifyNickname(){
