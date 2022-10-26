@@ -81,12 +81,11 @@ public class OrderService {
             order.addOrderItem(orderItem);
         }
 
-        order.makeName();
+        order.setName("예치금 충전");
 
-        if(orderItems.size() == 0){
-            order.setName("예치금 충전");
+        if(orderItems.size() != 0){
+            order.makeName();
         }
-
 
         orderRepository.save(order);
 
