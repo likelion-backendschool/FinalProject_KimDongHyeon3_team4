@@ -8,9 +8,11 @@ import com.example.finalproject2.post.entity.Post;
 import com.example.finalproject2.product.dto.ProductForm;
 import com.example.finalproject2.product.entity.Product;
 import com.example.finalproject2.product.service.ProductService;
+import com.example.finalproject2.security.dto.SecurityMember;
 import com.example.finalproject2.util.Util;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -56,8 +58,17 @@ public class ProductController {
     }
 
     @GetMapping("/create")
-    public String showProductCreate(Model model){
+    public String showProductCreate(@AuthenticationPrincipal SecurityMember securityMember,
+                                    Model model){
 
+
+        Member member = securityMember.getMember();
+
+        log.info("작가명 = {}", member.getNickname());
+
+        if(member.getNickname().equals("")){
+            return "redirect:/product/list?errorMsg=" + Util.url.encode("작가명을 등록하지 않았습니다.");
+        }
         List<Keyword> keywords = keywordService.findAll();
 
         model.addAttribute("keywords", keywords);
