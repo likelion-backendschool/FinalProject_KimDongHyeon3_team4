@@ -15,6 +15,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -74,9 +75,24 @@ public class OrderService {
             order.addOrderItem(orderItem);
         }
 
+        order.makeName();
+
         orderRepository.save(order);
 
         return order;
+    }
+
+    public void payByTossPayments(Order order) {
+        Member buyer = order.getMember();
+
+        int payPrice = order.getPayPrice();
+
+        memberService.addCash(buyer, payPrice, "주문결제충전__토스페이먼츠");
+
+        memberService.addCash(buyer, payPrice*-1, "주문결제__토스페이먼츠");
+
+        order.setPaymentDone();
+        orderRepository.save(order);
     }
 
     public void payByRestCash(Order order) {
@@ -103,6 +119,11 @@ public class OrderService {
 
         order.setRefundDone();
         orderRepository.save(order);
+    }
+
+
+    public Order findById(long id) {
+        return orderRepository.findById(id).orElse(null);
     }
 
 

@@ -28,6 +28,18 @@ public class Order {
     @ManyToOne
     Member member;
 
+    @Column
+    private String name;
+
+    @Column
+    private boolean isPaid;
+
+    @Column
+    private boolean isCanceled;
+
+    @Column
+    private boolean isRefunded;
+
     @Builder.Default
     @OneToMany(mappedBy = "order", orphanRemoval = true, cascade = CascadeType.ALL)
     private List<OrderItem> orderItems = new ArrayList<>();
@@ -58,11 +70,23 @@ public class Order {
         for ( OrderItem orderItem : orderItems ) {
             orderItem.setPaymentDone();
         }
+        isPaid = true;
     }
 
     public void setRefundDone() {
         for ( OrderItem orderItem : orderItems ) {
             orderItem.setRefundDone();
         }
+        isRefunded = true;
+    }
+
+    public void makeName() {
+        String name = orderItems.get(0).getProduct().getSubject();
+
+        if (orderItems.size() > 1) {
+            name += " 외 %d권".formatted(orderItems.size() - 1);
+        }
+
+        this.name = name;
     }
 }
