@@ -1,5 +1,7 @@
 package com.example.finalproject2.order.controller;
 
+import com.example.finalproject2.cart.entity.CartItem;
+import com.example.finalproject2.cart.service.CartService;
 import com.example.finalproject2.member.entity.Member;
 import com.example.finalproject2.member.service.MemberService;
 import com.example.finalproject2.order.entity.Order;
@@ -23,6 +25,7 @@ import org.springframework.web.client.RestTemplate;
 import javax.annotation.PostConstruct;
 import java.util.Base64;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 @Controller
@@ -35,6 +38,7 @@ public class OrderController {
     private final ObjectMapper objectMapper;
     private final OrderService orderService;
     private final MemberService memberService;
+    private final CartService cartService;
 
     @GetMapping("/create/{productId}")  //개별 결제
     public String createOrder(@AuthenticationPrincipal SecurityMember securityMember,
@@ -55,7 +59,17 @@ public class OrderController {
     }
 
     @GetMapping("/create")  //장바구니 결제
-    public String createOrder(){
+    public String createOrder(@AuthenticationPrincipal SecurityMember securityMember,
+                              Model model){
+
+        Member member = securityMember.getMember();
+
+        long restCash = memberService.getRestCash(member);
+
+        Order order = orderService.createByCart(member);
+
+        model.addAttribute("order", order);
+        model.addAttribute("restCash", restCash);
 
         return "/order/detail";
     }
