@@ -107,7 +107,7 @@ public class ProductController {
         Product product = productService.findById(id);
         productService.save(product, productForm.getSubject(), productForm.getSalePrice());
 
-        return "redirect:/product/" + Util.url.encode(id + "도서를 수정하였습니다.");
+        return "redirect:/product/" + id + "?msg=" + Util.url.encode(id + "도서를 수정하였습니다.");
     }
 
     @GetMapping("/{id}/delete")
