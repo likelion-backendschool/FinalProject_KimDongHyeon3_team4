@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html layout:decorate="~{layout/layout.html}">
+
+<head>
+    <title>예치금 충전</title>
+</head>
+
+<body>
+<main layout:fragment="main">
+    <section class="section section-join flex-grow flex flex-col items-center justify-center">
+
+        <script src="https://js.tosspayments.com/v1"></script>
+
+        <script th:inline="javascript">
+            const orderId = /*[[ ${order.id} ]]*/ null;
+            const buyerName = /*[[ ${order.member.username} ]]*/ null;
+            const orderName = /*[[ ${order.name} ]]*/ null;
+            const orderPayPrice = /*[[ ${order.getPayPrice} ]]*/ null;
+        </script>
+
+        <form hidden name="payByRestCashOnlyForm"
+              method="POST"
+              th:action="@{|/order/${order.id}/payByRestCash|}">
+        </form>
+
+        <div class="px-2 pt-4">
+            <h1 class="font-bold text-lg">예치금 충전</h1>
+
+            <div class="flex flex-col gap-3 mt-3">
+
+                <div>
+                    보유 예치금 : [[${restCash}]]
+                </div>
+                <div th:with="maxUseRestCash = ${order.getPayPrice > restCash ? restCash : order.getPayPrice}">
+                    <span>충전할 금액 : </span>
+                    <input type="text" id="Charge_RestCash" placeholder="충전할 금액">
+                </div>
+
+                <div>
+                    <button onclick="payment();" class="btn btn-sm btn-primary">결제</button>
+                    <a th:href="@{|/order/${order.id}/cancle|}" class="btn btn-sm btn-primary">취소</a>
+                </div>
+            </div>
+        </div>
+
+        <script>
+            const tossPayments = TossPayments("test_ck_ZORzdMaqN3wwW6vbzZD35AkYXQGw");
+
+            const Charge_RestCash = $("#Charge_RestCash");
+
+            function payment() {
+
+                let chargeRestCash = parseInt(Charge_RestCash.val());
+
+                if(chargeRestCash <= 0){
+                    warningModal("충전할 금액을 옳바르게 적어주세요");
+                    return;
+                }
+
+                const method = "카드"; // "카드" 혹은 "가상계좌"
+
+                const paymentData = {
+                    amount: chargeRestCash,
+                    orderId: "order__" + orderId + "__" + (Math.random() + "").substring(2),
+                    orderName,
+                    customerName: buyerName,
+                    successUrl: window.location.origin + "/order/" + orderId + "/success",
+                    failUrl: window.location.origin + "/order/" + orderId + "/fail"
+                };
+
+                tossPayments.requestPayment(method, paymentData);
+            }
+        </script>
+
+    </section>
+</main>
+</body>
+</html>

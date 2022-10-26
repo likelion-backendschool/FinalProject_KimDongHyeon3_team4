@@ -9,13 +9,17 @@ import com.example.finalproject2.order.service.OrderService;
 import com.example.finalproject2.product.entity.Product;
 import com.example.finalproject2.product.service.ProductService;
 import com.example.finalproject2.security.dto.SecurityMember;
+import com.example.finalproject2.security.service.SecurityMemberService;
 import com.example.finalproject2.util.Util;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.*;
 import org.springframework.http.client.ClientHttpResponse;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -33,12 +37,29 @@ import java.util.Map;
 @RequestMapping("/order")
 public class OrderController {
 
+    private final SecurityMemberService securityMemberService;
     private final ProductService productService;
     private final RestTemplate restTemplate = new RestTemplate();
     private final ObjectMapper objectMapper;
     private final OrderService orderService;
     private final MemberService memberService;
     private final CartService cartService;
+
+    @GetMapping("/charge")
+    public String orderCharge(@AuthenticationPrincipal SecurityMember securityMember,
+                              Model model){
+
+        Member member = securityMember.getMember();
+
+        long restCash = memberService.getRestCash(member);
+
+        Order order = orderService.createByRestCash(member);
+
+        model.addAttribute("order", order);
+        model.addAttribute("restCash", restCash);
+
+        return "/order/charge";
+    }
 
     @GetMapping("/create/{productId}")  //개별 결제
     public String createOrder(@AuthenticationPrincipal SecurityMember securityMember,
@@ -166,6 +187,10 @@ public class OrderController {
 
             orderService.payByTossPayments(order, payPriceRestCash);
 
+            Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+            SecurityMember securityMemberChange = (SecurityMember) authentication.getPrincipal();
+            SecurityContextHolder.getContext().setAuthentication(createNewAuthentication(authentication,securityMemberChange.getUsername()));
+
             JsonNode successNode = responseEntity.getBody();
             model.addAttribute("orderId", successNode.get("orderId").asText());
             String secret = successNode.get("secret").asText(); // 가상계좌의 경우 입금 callback 검증을 위해서 secret을 저장하기를 권장함
@@ -183,6 +208,15 @@ public class OrderController {
         model.addAttribute("message", message);
         model.addAttribute("code", code);
         return "/order/fail";
+    }
+
+    protected Authentication createNewAuthentication(Authentication currentAuth, String username) {
+
+        SecurityMember newPrincipal = (SecurityMember) securityMemberService.loadUserByUsername(username);
+        UsernamePasswordAuthenticationToken newAuth = new UsernamePasswordAuthenticationToken(newPrincipal, currentAuth.getCredentials(), newPrincipal.getAuthorities());
+        newAuth.setDetails(currentAuth.getDetails());
+        return newAuth;
+
     }
 
 }

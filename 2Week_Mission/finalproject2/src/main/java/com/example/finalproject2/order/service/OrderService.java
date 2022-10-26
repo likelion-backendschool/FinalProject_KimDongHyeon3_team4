@@ -26,6 +26,11 @@ public class OrderService {
     private final OrderRepository orderRepository;
     private final MemberService memberService;
 
+    public Order createByRestCash(Member member) {
+        List<OrderItem> orderItems = new ArrayList<>();
+
+        return save(member, orderItems);
+    }
     public Order createByProduct(Member member, Product product) {
 
         List<OrderItem> orderItems = new ArrayList<>();
@@ -74,7 +79,7 @@ public class OrderService {
             order.addOrderItem(orderItem);
         }
 
-        order.makeName();
+        order.setName("예치금 충전");
 
         orderRepository.save(order);
 
@@ -88,6 +93,12 @@ public class OrderService {
 
         long pgPayPrice = payPrice - useRestCash;
 
+        if(order.getName().equals("예치금 충전")){
+            memberService.addCash(buyer, pgPayPrice, "충전__토스페이먼츠");
+            order.setPaymentDone();
+            orderRepository.save(order);
+            return;
+        }
         memberService.addCash(buyer, pgPayPrice, "주문__%d__충전__토스페이먼츠".formatted(order.getId()));
         memberService.addCash(buyer, pgPayPrice * -1, "주문__%d__사용__토스페이먼츠".formatted(order.getId()));
 
@@ -139,4 +150,6 @@ public class OrderService {
         order.setCanceled(true);
         orderRepository.save(order);
     }
+
+
 }

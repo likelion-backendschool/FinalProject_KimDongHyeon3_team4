@@ -17,6 +17,7 @@ public class SecurityMember extends User {
     private final String username;
     private final String email;
     private final String nickname;
+    private final long restCash;
     private final int authLevel;
 
     public SecurityMember(Member member, List<GrantedAuthority> authorities) {
@@ -28,6 +29,7 @@ public class SecurityMember extends User {
         this.email = member.getEmail();
         this.nickname = member.getNickname();
         this.authLevel = member.getAuthLevel();
+        this.restCash = member.getRestCash();
     }
 
     public String getName() {
@@ -43,6 +45,7 @@ public class SecurityMember extends User {
                 .username(username)
                 .email(email)
                 .nickname(nickname)
+                .restCash(restCash)
                 .authLevel(authLevel)
                 .build();
     }

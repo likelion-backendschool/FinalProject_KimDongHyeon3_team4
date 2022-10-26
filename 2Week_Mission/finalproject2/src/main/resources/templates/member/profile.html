@@ -55,6 +55,14 @@
                         <div th:text="${#authentication.principal.nickname} == null ? '일반회원 입니다. 작가명을 수정하세요' : ${#authentication.principal.nickname}"></div>
                 </div>
 
+                <div class="form-control">
+                    <label class="label">
+                        <span class="label-text">나의 예치금</span>
+                    </label>
+                    <div th:text="${#authentication.principal.restCash}"></div>
+                    <a href="/order/charge" class="btn btn-secondary btn-outline">충전하기</a>
+                </div>
+
                 <div class="grid grid-cols-2 mt-2 gap-2">
                     <a href="/member/modify" class="btn btn-secondary btn-outline">작가명 변경하기</a>
                     <a href="/member/modifyPassword" class="btn btn-secondary btn-outline">비밀번호 변경하기</a>
