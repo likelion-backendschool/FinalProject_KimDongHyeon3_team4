@@ -31,6 +31,14 @@ public class MyBookService {
         return myBookRepository.findByMember(member);
     }
 
-    //삭제
+    public void delete(Member member, Product product) {
+
+        MyBook myBooks = myBookRepository.findByMemberAndProduct(member, product);
+
+        myBookRepository.delete(myBooks);
+
+    }
+
+
 
 }

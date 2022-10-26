@@ -144,6 +144,12 @@ public class OrderService {
         }
     }
 
+    public void deleteMyBook(List<OrderItem> orderItems, Member member){
+        for(OrderItem orderItem : orderItems){
+            myBookService.delete(member, orderItem.getProduct());
+        }
+    }
+
     public void refund(Order order) {
 
         int payPrice = order.getPayPrice();
@@ -151,6 +157,8 @@ public class OrderService {
 
         order.setRefundDone();
         orderRepository.save(order);
+
+        deleteMyBook(order.getOrderItems(), order.getMember());
     }
 
 

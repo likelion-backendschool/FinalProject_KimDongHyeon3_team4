@@ -130,6 +130,17 @@ public class OrderController {
         return "redirect:/product/list?msg=" + Util.url.encode("%d의 주문이 취소되었습니다.".formatted(order.getId()));
     }
 
+    @GetMapping("/{orderId}/refund")  //개별 결제
+    public String refundOrder(@AuthenticationPrincipal SecurityMember securityMember,
+                              @PathVariable long orderId){
+
+        Order order = orderService.findById(orderId);
+
+        orderService.refund(order);
+
+        return "redirect:/member/mybook?msg=" + Util.url.encode("%d의 주문이 환불되었습니다.".formatted(order.getId()));
+    }
+
     @PostConstruct
     private void init() {
         restTemplate.setErrorHandler(new ResponseErrorHandler() {
