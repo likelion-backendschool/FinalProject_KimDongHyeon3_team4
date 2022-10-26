@@ -5,6 +5,8 @@ import com.example.finalproject2.member.entity.Member;
 import com.example.finalproject2.member.service.MemberService;
 import com.example.finalproject2.mybook.entity.MyBook;
 import com.example.finalproject2.mybook.service.MyBookService;
+import com.example.finalproject2.order.entity.Order;
+import com.example.finalproject2.order.service.OrderService;
 import com.example.finalproject2.security.dto.SecurityMember;
 import com.example.finalproject2.security.service.SecurityMemberService;
 import com.example.finalproject2.util.Util;
@@ -42,6 +44,7 @@ public class MemberController {
     private final SecurityMemberService securityMemberService;
     private final PasswordEncoder passwordEncoder;
     private final MyBookService myBookService;
+    private final OrderService orderService;
 
     @GetMapping("/join")
     public String showJoin(){
@@ -73,7 +76,11 @@ public class MemberController {
         Member member = securityMember.getMember();
         List<MyBook> myBooks = myBookService.findByMember(member);
 
+        List<Order> orders = orderService.findByMember(member);
+
         model.addAttribute("myBooks", myBooks);
+        model.addAttribute("orders",orders);
+
         return "/member/mybook";
     }
 

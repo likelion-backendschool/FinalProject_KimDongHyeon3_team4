@@ -169,4 +169,7 @@ public class OrderService {
     }
 
 
+    public List<Order> findByMember(Member member) {
+        return orderRepository.findByMember(member);
+    }
 }
