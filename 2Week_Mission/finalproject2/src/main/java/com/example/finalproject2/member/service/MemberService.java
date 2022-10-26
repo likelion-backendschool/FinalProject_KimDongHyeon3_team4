@@ -69,6 +69,8 @@ public class MemberService {
     }
 
     public long getRestCash(Member member) {
-        return cashService.getRestCash(member);
+        member = memberRepository.findById(member.getId()).orElse(null);
+
+        return member.getRestCash();
     }
 }

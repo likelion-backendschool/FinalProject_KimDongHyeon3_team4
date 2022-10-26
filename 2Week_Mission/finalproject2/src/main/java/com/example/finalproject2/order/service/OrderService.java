@@ -127,4 +127,7 @@ public class OrderService {
     }
 
 
+    public boolean memberCanPayment(Member member, Order order) {
+        return member.getId().equals(order.getMember().getId());
+    }
 }

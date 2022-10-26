@@ -1,24 +1,24 @@
 package com.example.finalproject2.order.controller;
 
 import com.example.finalproject2.member.entity.Member;
+import com.example.finalproject2.member.service.MemberService;
 import com.example.finalproject2.order.entity.Order;
 import com.example.finalproject2.order.service.OrderService;
 import com.example.finalproject2.product.entity.Product;
 import com.example.finalproject2.product.service.ProductService;
 import com.example.finalproject2.security.dto.SecurityMember;
+import com.example.finalproject2.util.Util;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.boot.Banner;
 import org.springframework.http.*;
 import org.springframework.http.client.ClientHttpResponse;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.client.ResponseErrorHandler;
 import org.springframework.web.client.RestTemplate;
 
@@ -36,6 +36,7 @@ public class OrderController {
     private final RestTemplate restTemplate = new RestTemplate();
     private final ObjectMapper objectMapper;
     private final OrderService orderService;
+    private final MemberService memberService;
 
     @GetMapping("/create/{productId}")  //개별 결제
     public String createOrder(@AuthenticationPrincipal SecurityMember securityMember,
@@ -45,11 +46,12 @@ public class OrderController {
         Product product = productService.findById(productId);
         Member member = securityMember.getMember();
 
+        long restCash = memberService.getRestCash(member);
+
         Order order = orderService.createByProduct(member, product);
 
-        model.addAttribute("member",member);
         model.addAttribute("order", order);
-        model.addAttribute("product", product);
+        model.addAttribute("restCash", restCash);
 
         return "/order/detail";
     }
@@ -58,6 +60,23 @@ public class OrderController {
     public String createOrder(){
 
         return "/order/detail";
+    }
+
+    @PostMapping("/{id}/payByRestCash")
+    public String payByRestCashOnly(@AuthenticationPrincipal SecurityMember securityMember, @PathVariable long id) {
+        Order order = orderService.findById(id);
+
+        Member member = securityMember.getMember();
+
+        long restCash = memberService.getRestCash(member);
+
+        if (orderService.memberCanPayment(member, order) == false) {
+            throw new RuntimeException("현재 회원이 결제를 할 수 없습니다.");
+        }
+
+        orderService.payByRestCash(order);
+
+        return "redirect:/product/list?msg=%s".formatted(Util.url.encode("예치금으로 결제했습니다."));
     }
 
     @PostConstruct

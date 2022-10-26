@@ -25,6 +25,6 @@ public class CashService {
     }
 
     public long getRestCash(Member member) {
-        return 0;
+        return member.getRestCash();
     }
 }
