@@ -136,6 +136,11 @@ public class OrderController {
 
         Order order = orderService.findById(orderId);
 
+        if(!orderService.canRefund(order)){
+            return "redirect:/member/mybook?errorMsg=" + Util.url.encode("%d의 주문은 환불기간이 종료되어 환불할 수 없습니다.".formatted(order.getId()));
+        }
+
+
         orderService.refund(order);
 
         return "redirect:/member/mybook?msg=" + Util.url.encode("%d의 주문이 환불되었습니다.".formatted(order.getId()));

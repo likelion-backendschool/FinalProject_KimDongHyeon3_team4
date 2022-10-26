@@ -11,9 +11,13 @@ import com.example.finalproject2.order.repository.OrderRepository;
 import com.example.finalproject2.product.entity.Product;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import net.bytebuddy.asm.Advice;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.Duration;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -178,5 +182,21 @@ public class OrderService {
 
     public List<Order> findByMember(Member member) {
         return orderRepository.findByMember(member);
+    }
+
+    public boolean canRefund(Order order){
+
+        LocalDateTime nowTime = LocalDateTime.now();
+        LocalDateTime orderTime = order.getCreateDate();
+
+        long time = Duration.between(nowTime, orderTime).toMinutes()*-1;
+
+        log.info("두날짜 사이의 분 차이 = {}",time);
+
+        if(time > 10){
+            return false;
+        }
+
+        return true;
     }
 }
