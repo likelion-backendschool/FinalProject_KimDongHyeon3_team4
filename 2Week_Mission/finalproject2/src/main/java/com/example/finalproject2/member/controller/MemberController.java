@@ -3,6 +3,8 @@ package com.example.finalproject2.member.controller;
 import com.example.finalproject2.member.dto.JoinForm;
 import com.example.finalproject2.member.entity.Member;
 import com.example.finalproject2.member.service.MemberService;
+import com.example.finalproject2.mybook.entity.MyBook;
+import com.example.finalproject2.mybook.service.MyBookService;
 import com.example.finalproject2.security.dto.SecurityMember;
 import com.example.finalproject2.security.service.SecurityMemberService;
 import com.example.finalproject2.util.Util;
@@ -13,6 +15,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
@@ -26,6 +29,7 @@ import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
 import java.security.Principal;
 import java.util.HashMap;
+import java.util.List;
 import java.util.UUID;
 
 @Controller
@@ -37,6 +41,7 @@ public class MemberController {
     private final MemberService memberService;
     private final SecurityMemberService securityMemberService;
     private final PasswordEncoder passwordEncoder;
+    private final MyBookService myBookService;
 
     @GetMapping("/join")
     public String showJoin(){
@@ -58,7 +63,19 @@ public class MemberController {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         SecurityMember securityMember = (SecurityMember) authentication.getPrincipal();
         SecurityContextHolder.getContext().setAuthentication(createNewAuthentication(authentication,securityMember.getUsername()));
-        return "/member/profile";}
+        return "/member/profile";
+    }
+
+    @GetMapping("/mybook")
+    public String showMyBook(@AuthenticationPrincipal SecurityMember securityMember,
+                             Model model){
+
+        Member member = securityMember.getMember();
+        List<MyBook> myBooks = myBookService.findByMember(member);
+
+        model.addAttribute("myBooks", myBooks);
+        return "/member/mybook";
+    }
 
     @GetMapping("/modify")
     public String showModifyNickname(){

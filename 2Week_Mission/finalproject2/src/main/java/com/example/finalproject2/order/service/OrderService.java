@@ -4,6 +4,7 @@ import com.example.finalproject2.cart.entity.CartItem;
 import com.example.finalproject2.cart.service.CartService;
 import com.example.finalproject2.member.entity.Member;
 import com.example.finalproject2.member.service.MemberService;
+import com.example.finalproject2.mybook.service.MyBookService;
 import com.example.finalproject2.order.entity.Order;
 import com.example.finalproject2.order.entity.OrderItem;
 import com.example.finalproject2.order.repository.OrderRepository;
@@ -25,6 +26,7 @@ public class OrderService {
     private final CartService cartService;
     private final OrderRepository orderRepository;
     private final MemberService memberService;
+    private final MyBookService myBookService;
 
     public Order createByRestCash(Member member) {
         List<OrderItem> orderItems = new ArrayList<>();
@@ -79,7 +81,12 @@ public class OrderService {
             order.addOrderItem(orderItem);
         }
 
-        order.setName("예치금 충전");
+        order.makeName();
+
+        if(orderItems.size() == 0){
+            order.setName("예치금 충전");
+        }
+
 
         orderRepository.save(order);
 
@@ -108,6 +115,8 @@ public class OrderService {
 
         order.setPaymentDone();
         orderRepository.save(order);
+
+        saveMyBook(order.getOrderItems(), buyer);
     }
 
     public void payByRestCash(Order order) {
@@ -125,6 +134,14 @@ public class OrderService {
 
         order.setPaymentDone();
         orderRepository.save(order);
+
+        saveMyBook(order.getOrderItems(), buyer);
+    }
+
+    public void saveMyBook(List<OrderItem> orderItems, Member member){
+        for(OrderItem orderItem : orderItems){
+            myBookService.save(member, orderItem.getProduct());
+        }
     }
 
     public void refund(Order order) {

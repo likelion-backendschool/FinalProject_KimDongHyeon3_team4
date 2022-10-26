@@ -87,6 +87,12 @@ public class OrderController {
 
         long restCash = memberService.getRestCash(member);
 
+        List<CartItem> cartItems = cartService.findByBuyer(member);
+
+        if(cartItems.size() == 0){
+            return "redirect:/cart/list?errorMsg=" + Util.url.encode("장바구니에 담긴 상품이 없습니다.");
+        }
+
         Order order = orderService.createByCart(member);
 
         model.addAttribute("order", order);

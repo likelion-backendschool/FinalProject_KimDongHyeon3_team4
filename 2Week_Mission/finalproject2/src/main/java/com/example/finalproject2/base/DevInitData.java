@@ -153,7 +153,7 @@ public class DevInitData {
             int order1PayPrice = order1.getPayPrice();
 
             orderService.payByRestCash(order1);    //결제 모듈 없이 예치금으로 바로 결제
-            orderService.refund(order1);
+            //orderService.refund(order1);
 
         };
     }
