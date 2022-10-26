@@ -23,7 +23,6 @@
               th:action="@{|/order/${order.id}/payByRestCash|}">
         </form>
 
-
         <div class="px-2 pt-4">
             <h1 class="font-bold text-lg">주문 상세내용</h1>
 
@@ -94,6 +93,7 @@
 
                 <div>
                     <button onclick="payment();" class="btn btn-sm btn-primary">결제</button>
+                    <a th:href="@{|/order/${order.id}/cancle|}" class="btn btn-sm btn-primary">취소</a>
                 </div>
             </div>
         </div>
@@ -105,6 +105,8 @@
             const $PaymentForm__pgPayPriceDisplay = $("#PaymentForm__pgPayPriceDisplay");
 
             const tossPayments = TossPayments("test_ck_ZORzdMaqN3wwW6vbzZD35AkYXQGw");
+
+
 
             function payment() {
 

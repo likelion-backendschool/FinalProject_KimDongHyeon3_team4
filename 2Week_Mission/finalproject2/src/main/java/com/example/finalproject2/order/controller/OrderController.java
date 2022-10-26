@@ -11,10 +11,8 @@ import com.example.finalproject2.util.Util;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
-import org.springframework.boot.Banner;
 import org.springframework.http.*;
 import org.springframework.http.client.ClientHttpResponse;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -78,6 +76,17 @@ public class OrderController {
         orderService.payByRestCash(order);
 
         return "redirect:/product/list?msg=%s".formatted(Util.url.encode("예치금으로 결제했습니다."));
+    }
+
+    @GetMapping("/{orderId}/cancle")  //개별 결제
+    public String cancelOrder(@AuthenticationPrincipal SecurityMember securityMember,
+                              @PathVariable long orderId){
+
+        Order order = orderService.findById(orderId);
+
+        orderService.cancelOrder(order);
+
+        return "redirect:/product/list?msg=" + Util.url.encode("%d의 주문이 취소되었습니다.".formatted(order.getId()));
     }
 
     @PostConstruct

@@ -134,4 +134,9 @@ public class OrderService {
     public boolean memberCanPayment(Member member, Order order) {
         return member.getId().equals(order.getMember().getId());
     }
+
+    public void cancelOrder(Order order) {
+        order.setCanceled(true);
+        orderRepository.save(order);
+    }
 }
