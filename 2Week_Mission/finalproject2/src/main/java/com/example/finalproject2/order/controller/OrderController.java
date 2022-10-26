@@ -63,7 +63,8 @@ public class OrderController {
     }
 
     @PostMapping("/{id}/payByRestCash")
-    public String payByRestCashOnly(@AuthenticationPrincipal SecurityMember securityMember, @PathVariable long id) {
+    public String payByRestCashOnly(@AuthenticationPrincipal SecurityMember securityMember,
+                                    @PathVariable long id) {
         Order order = orderService.findById(id);
 
         Member member = securityMember.getMember();
@@ -96,16 +97,24 @@ public class OrderController {
     private final String SECRET_KEY = "test_sk_jZ61JOxRQVEgMjQY2bR8W0X9bAqw";
 
     @RequestMapping("/{id}/success")
-    public String confirmPayment(@PathVariable long id,
-            @RequestParam String paymentKey, @RequestParam String orderId, @RequestParam Long amount,
-            Model model) throws Exception {
+    public String confirmPayment(@AuthenticationPrincipal SecurityMember securityMember,
+                                 @PathVariable long id,
+                                 @RequestParam String paymentKey,
+                                 @RequestParam String orderId,
+                                 @RequestParam Long amount,
+                                 Model model) throws Exception {
 
         Order order = orderService.findById(id);
+        Member member = securityMember.getMember();
 
         long orderIdInputed = Long.parseLong(orderId.split("__")[1]);
 
         if ( id != orderIdInputed ) {
             throw new RuntimeException("생성된 주문이 없습니다.");
+        }
+
+        if (orderService.memberCanPayment(member, order) == false) {
+            throw new RuntimeException("현재 회원이 결제를 할 수 없습니다.");
         }
 
         HttpHeaders headers = new HttpHeaders();
@@ -115,7 +124,15 @@ public class OrderController {
 
         Map<String, String> payloadMap = new HashMap<>();
         payloadMap.put("orderId", orderId);
-        payloadMap.put("amount", String.valueOf(order.getPayPrice()));
+        payloadMap.put("amount", String.valueOf(amount));
+
+
+        long restCash = memberService.getRestCash(member);
+        long payPriceRestCash = order.getPayPrice() - amount;
+
+        if (payPriceRestCash > restCash) {
+            throw new RuntimeException("예치금이 부족합니다.");
+        }
 
         HttpEntity<String> request = new HttpEntity<>(objectMapper.writeValueAsString(payloadMap), headers);
 
@@ -124,7 +141,7 @@ public class OrderController {
 
         if (responseEntity.getStatusCode() == HttpStatus.OK) {
 
-            orderService.payByTossPayments(order);
+            orderService.payByTossPayments(order, payPriceRestCash);
 
             JsonNode successNode = responseEntity.getBody();
             model.addAttribute("orderId", successNode.get("orderId").asText());
