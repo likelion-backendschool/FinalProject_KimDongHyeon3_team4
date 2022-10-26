@@ -26,6 +26,20 @@ public class OrderService {
     private final OrderRepository orderRepository;
     private final MemberService memberService;
 
+    public Order createByProduct(Member member, Product product) {
+
+        List<OrderItem> orderItems = new ArrayList<>();
+
+        orderItems.add(OrderItem.builder()
+                .product(product)
+                .price(product.getPrice())
+                .salePrice(product.getSalePrice())
+                .wholesalePrice(product.getWholesalePrice())
+                .build());
+
+        return save(member, orderItems);
+    }
+
     public Order createByCart(Member member){
 
         List<CartItem> cartItems = cartService.findByBuyer(member);
@@ -90,4 +104,6 @@ public class OrderService {
         order.setRefundDone();
         orderRepository.save(order);
     }
+
+
 }

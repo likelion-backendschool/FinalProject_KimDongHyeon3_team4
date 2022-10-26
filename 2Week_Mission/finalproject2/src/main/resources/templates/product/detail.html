@@ -17,14 +17,14 @@
                     <label class="label">
                         <span class="label-text">가격</span>
                     </label>
-                    <div th:text="${product.salePrice}"></div>
+                    <div name="salePrice" th:text="${product.salePrice}"></div>
                 </div>
 
                 <div class="form-control">
                     <label class="label">
                         <span class="label-text">키워드</span>
                     </label>
-                    <div th:text="${product.keyword.content}"></div>
+                    <div name="keyword" th:text="${product.keyword.content}"></div>
                 </div>
 
                 <div class="flex flex-col">
@@ -40,8 +40,8 @@
                 </div>
 
                 <div class="my-3">
-                    <a th:href="@{|/product/${product.id}/modify|}"
-                       class="btn btn-sm btn-outline-secondary"
+                    <a class="btn btn-sm btn-outline-secondary"
+                       th:href="@{|/order/create/${product.id}|}"
                        sec:authorize="isAuthenticated()"
                        th:if="${product.author != null and #authentication.getPrincipal().getUsername() != product.author.username}"
                        th:text="구매"></a>
