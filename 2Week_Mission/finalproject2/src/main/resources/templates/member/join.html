@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html layout:decorate="~{layout/layout.html}">
+
+<head>
+    <title>회원가입</title>
+</head>
+
+<body>
+<main layout:fragment="main">
+    <section class="section section-join flex-grow flex flex-col items-center justify-center">
+
+        <div class="max-w-md w-full px-2 pt-4">
+            <h1 class="font-bold text-lg">회원가입</h1>
+
+            <script>
+                let VerifyEmailCh = false;
+                let MemberJoin__submitDone = false;
+
+                function MemberJoin__submit(form) {
+
+                    if(!VerifyEmailCh){
+                        warningModal("인증 코드 확인을 해주세요");
+                        form.email.focus();
+                        return;
+                    }
+
+                    if (MemberJoin__submitDone) {
+                        return;
+                    }
+
+                    form.username.value = form.username.value.trim();
+                    if (form.username.value.length == 0) {
+                        warningModal("로그인아이디를 입력해주세요.");
+                        form.username.focus();
+                        return;
+                    }
+
+                    form.password.value = form.password.value.trim();
+                    if (form.password.value.length == 0) {
+                        warningModal("로그인비밀번호를 입력해주세요.");
+                        form.password.focus();
+                        return;
+                    }
+
+                    form.passwordConfirm.value = form.passwordConfirm.value.trim();
+                    if (form.password.value != form.passwordConfirm.value) {
+                        warningModal("로그인비밀번호를 똑같이 입력해주세요.");
+                        form.passwordConfirm.focus();
+                        return;
+                    }
+
+                    form.email.value = form.email.value.trim();
+                    if (form.email.value.length == 0) {
+                        warningModal("이메일을 입력해주세요.");
+                        form.email.focus();
+                        return;
+                    }
+
+                    form.submit();
+                    MemberJoin__submitDone = true;
+                }
+
+                function VerifyEmail(){
+
+                    var email = document.querySelector("input[name=email]");
+
+                    if(email.value.length == 0 ){
+                        warningModal("이메일 입력해주세요.");
+                        email.focus();
+                        return;
+                    }
+
+                    fetch("http://localhost:8080/member/verifyEmail", {
+                        method: "POST",
+                        headers: {
+                            "Content-Type": "application/json",
+                        },
+                        body: JSON.stringify({
+                            email: email.value,
+                        }),
+                    }).then((response) => {
+                        console.log(response.status)
+                            if(response.status == 200) {
+                                successModal("인증 코드를 발송하였습니다.");
+
+                                TIMER();
+                                setTimeout(function(){
+                                    clearInterval(PlAYTIME);
+                                },300000);//5분이 되면 타이머를 삭제한다.
+
+                            }else{
+                                warningModal("이메일 정보가 옳바르지 않습니다.");
+                            }
+                        }
+                    );
+
+                }
+
+                function VerifyEmailCode(){
+                    var code = document.querySelector("input[name=code]");
+
+                    if(code.value.length == 0 ){
+                        warningModal("인증코드 입력해주세요.");
+                        code.focus();
+                        return;
+                    }
+
+                    fetch("http://localhost:8080/member/verifyEmailCode", {
+                        method: "POST",
+                        headers: {
+                            "Content-Type": "application/json",
+                        },
+                        body: JSON.stringify({
+                            code: code.value,
+                        }),
+                    }).then((response) => {
+                        console.log(response.status)
+                        if(response.status == 200) {
+                            successModal("인증 코드가 확인되었습니다.");
+                            VerifyEmailCh=true;
+                            document.getElementById('Timer').style.display = "hidden";
+                        }else if(response.status == 408){
+                            warningModal("인증 코드 확인 시간이 종료되었습니다. 다시 시도해 주세요");
+                        }else{
+                            warningModal("인증 코드가 일치하지 않습니다.");
+                        }
+                    }
+                    );
+                }
+            </script>
+
+            <form th:action method="POST" class="flex flex-col gap-3"
+                  onsubmit="MemberJoin__submit(this); return false;">
+                <div class="form-control">
+                    <label class="label">
+                        <span class="label-text">아이디</span>
+                    </label>
+                    <input autofocus type="text" name="username" placeholder="아이디" class="input input-bordered"
+                           maxlength="50">
+                </div>
+
+                <div class="form-control">
+                    <label class="label">
+                        <span class="label-text">비밀번호</span>
+                    </label>
+                    <input type="password" name="password"
+                           placeholder="비밀번호" class="input input-bordered" maxlength="50">
+                </div>
+
+                <div class="form-control">
+                    <label class="label">
+                        <span class="label-text">비밀번호 확인</span>
+                    </label>
+                    <input type="password" name="passwordConfirm"
+                           placeholder="비밀번호 재입력" class="input input-bordered" maxlength="50">
+                </div>
+
+                <div class="form-control">
+                    <label class="label">
+                        <span class="label-text">이메일</span>
+                    </label>
+                    <input type="email" name="email" placeholder="이메일" class="input input-bordered" maxlength="50">
+                    <input class="btn btn-primary" type="button" onclick="VerifyEmail()" value="인증 코드 보내기">
+                </div>
+
+                <div class="form-control">
+                    <label class="label">
+                        <span class="label-text">인증 코드</span>
+                    </label>
+                    <input type="text" name="code" placeholder="인증코드" class="input input-bordered" maxlength="50">
+                    <input id="Timer" type="text" value="" readonly/>
+                    <input class="btn btn-primary" type="button" onclick="VerifyEmailCode()" value="인증 코드 인증">
+                </div>
+
+                <div class="form-control">
+                    <label class="label">
+                        <span class="label-text">필명</span>
+                    </label>
+                    <input autofocus type="text" name="nickname" placeholder="필명" class="input input-bordered"
+                           maxlength="50">
+                </div>
+
+                <div class="grid grid-cols-2 mt-2 gap-2">
+                    <input class="btn btn-primary" type="submit" value="회원가입">
+                    <a href="/member/login" class="btn btn-secondary btn-outline">로그인</a>
+                </div>
+            </form>
+        </div>
+
+        </div>
+
+        <script>
+            const Timer=document.getElementById('Timer'); //스코어 기록창-분
+            let time= 300000;
+            let min=5;
+            let sec=60;
+
+
+            Timer.value=min+":"+'00';
+
+            function TIMER(){
+                PlAYTIME=setInterval(function(){
+                    time=time-1000; //1초씩 줄어듦
+                    min=time/(60*1000); //초를 분으로 나눠준다.
+
+                    if(sec>0){ //sec=60 에서 1씩 빼서 출력해준다.
+                        sec=sec-1;
+                        Timer.value=Math.floor(min)+':'+sec; //실수로 계산되기 때문에 소숫점 아래를 버리고 출력해준다.
+                    }
+                    if(sec===0){
+                        // 0에서 -1을 하면 -59가 출력된다.
+                        // 그래서 0이 되면 바로 sec을 60으로 돌려주고 value에는 0을 출력하도록 해준다.
+                        sec=60;
+                        Timer.value=Math.floor(min)+':'+'00'
+                    }
+
+                },1000); //1초마다
+            }
+        </script>
+    </section>
+
+</main>
+</body>
+</html>

@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html layout:decorate="~{layout/layout.html}">
+
+<head>
+    <title>도서 디테일</title>
+</head>
+
+<body>
+<main layout:fragment="main">
+    <section class="section section-join flex-grow flex flex-col items-center justify-center">
+
+        <h2 class="border-bottom py-2" th:text="${product.subject}"></h2>
+
+        <div class="max-w-3xl card my-3">
+            <div>
+                <div class="form-control">
+                    <label class="label">
+                        <span class="label-text">가격</span>
+                    </label>
+                    <div name="salePrice" th:text="${product.salePrice}"></div>
+                </div>
+
+                <div class="form-control">
+                    <label class="label">
+                        <span class="label-text">키워드</span>
+                    </label>
+                    <div name="keyword" th:text="${product.keyword.content}"></div>
+                </div>
+
+                <div class="flex flex-col">
+                    <label th:if="${product.modifyDate != null}" class="label">
+                        <span class="label-text">수정 일자</span>
+                        <span class="label-text" th:text="${#temporals.format(product.modifyDate, 'yyyy-MM-dd HH:mm')}"></span>
+                    </label>
+
+                    <label class="label">
+                        <span class="label-text" th:text="${product.author?.username}"></span>
+                        <span class="label-text" th:text="${#temporals.format(product.createDate, 'yyyy-MM-dd HH:mm')}"></span>
+                    </label>
+                </div>
+
+                <div class="my-3">
+                    <a class="btn btn-sm btn-outline-secondary"
+                       th:href="@{|/order/create/${product.id}|}"
+                       sec:authorize="isAuthenticated()"
+                       th:if="${product.author != null and #authentication.getPrincipal().getUsername() != product.author.username}"
+                       th:text="구매"></a>
+
+                    <a th:href="@{|/cart/add/${product.id}|}"
+                       class="btn btn-sm btn-outline-secondary"
+                       sec:authorize="isAuthenticated()"
+                       th:if="${product.author != null and #authentication.getPrincipal().getUsername() != product.author.username}"
+                       th:text="장바구니"></a>
+
+                    <a th:href="@{|/product/${product.id}/modify|}"
+                       class="btn btn-sm btn-outline-secondary"
+                       sec:authorize="isAuthenticated()"
+                       th:if="${product.author != null and #authentication.getPrincipal().getUsername() == product.author.username}"
+                       th:text="수정"></a>
+
+                    <a onclick="if ( !confirm('정말로 삭제하시겠습니까?') ) return false;"
+                       th:href="@{|/product/${product.id}/delete|}"
+                       class="btn btn-sm btn-outline-secondary" sec:authorize="isAuthenticated()"
+                       th:if="${product.author != null and #authentication.getPrincipal().getUsername() == product.author.username}"
+                       th:text="삭제"></a>
+                </div>
+            </div>
+        </div>
+
+
+    </section>
+</main>
+</body>
+</html>
