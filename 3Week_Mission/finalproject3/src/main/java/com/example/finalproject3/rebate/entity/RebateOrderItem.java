@@ -1,6 +1,8 @@
 package com.example.finalproject3.rebate.entity;
 
 
+import com.example.finalproject3.cash.entity.CashLog;
+import com.example.finalproject3.member.entity.Member;
 import com.example.finalproject3.order.entity.Order;
 import com.example.finalproject3.order.entity.OrderItem;
 import com.example.finalproject3.product.entity.Product;
@@ -48,6 +50,18 @@ public class RebateOrderItem {
     @JoinColumn(foreignKey = @ForeignKey(ConstraintMode.NO_CONSTRAINT))
     private Product product;
 
+    @ManyToOne
+    @ToString.Exclude
+    @JoinColumn(foreignKey = @ForeignKey(ConstraintMode.NO_CONSTRAINT))
+    private CashLog rebateCashLog; // 정산에 관련된 환급지급내역
+
+    // 회원
+    @ManyToOne
+    @ToString.Exclude
+    @JoinColumn(foreignKey = @ForeignKey(ConstraintMode.NO_CONSTRAINT))
+    private Member buyer;
+    private String buyerName;
+
     // 가격
     private int price; // 소비가
     private int salePrice; // 실제판매가
@@ -82,5 +96,8 @@ public class RebateOrderItem {
 
         // 주문품목 추가데이터
         orderItemCreateDate = orderItem.getCreateDate();
+
+        buyer = orderItem.getOrder().getMember();
+        buyerName = orderItem.getOrder().getMember().getUsername();
     }
 }
