@@ -1,7 +1,6 @@
 package com.example.finalproject3.rebate.controller;
 
-import com.example.finalproject3.rebate.service.AdmRebateService;
-import com.example.finalproject3.util.Util;
+import com.example.finalproject3.rebate.service.RebateService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
@@ -10,14 +9,12 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import java.time.LocalDateTime;
-
 @Controller
 @RequestMapping("/adm/rebate")
 @RequiredArgsConstructor
-public class AdmRebateController {
+public class RebateController {
 
-    private final AdmRebateService admRebateService;
+    private final RebateService rebateService;
 
     @GetMapping("/create")
     @PreAuthorize("hasAuthority('ADMIN')")
@@ -30,7 +27,7 @@ public class AdmRebateController {
     @ResponseBody
     public String create(String yearMonth) {
 
-        admRebateService.createData(yearMonth);
+        rebateService.createData(yearMonth);
 
 
 return "성공";
