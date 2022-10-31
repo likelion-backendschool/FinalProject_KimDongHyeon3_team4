@@ -9,5 +9,5 @@ import java.util.List;
 
 @Repository
 public interface OrderItemRepository extends JpaRepository<OrderItem, Long> {
-    List<OrderItem> findByCreateDateBetween(LocalDateTime fromDate, LocalDateTime toDate);
+    List<OrderItem> findByPayDateBetween(LocalDateTime fromDate, LocalDateTime toDate);
 }

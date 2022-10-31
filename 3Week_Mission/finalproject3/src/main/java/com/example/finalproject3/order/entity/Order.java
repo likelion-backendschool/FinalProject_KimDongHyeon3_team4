@@ -40,6 +40,9 @@ public class Order {
     @Column
     private boolean isRefunded;
 
+    @Column
+    private LocalDateTime payDate;
+
     @Builder.Default
     @OneToMany(mappedBy = "order", orphanRemoval = true, cascade = CascadeType.ALL)
     private List<OrderItem> orderItems = new ArrayList<>();
@@ -71,6 +74,7 @@ public class Order {
             orderItem.setPaymentDone();
         }
         isPaid = true;
+        payDate = LocalDateTime.now();
     }
 
     public void setRefundDone() {

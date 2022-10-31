@@ -51,6 +51,9 @@ public class OrderItem {
     @Column
     private boolean isPaid; // 결제여부
 
+    @Column
+    private  LocalDateTime payDate;
+
     @CreatedDate
     private LocalDateTime createDate;
 
@@ -61,6 +64,7 @@ public class OrderItem {
         this.pgFee = 0;
         this.payPrice = salePrice;   //쿠폰, 이벤트 적용시 변경되어야됨
         this.isPaid = true;
+        this.payDate = LocalDateTime.now();
     }
 
     public void setRefundDone() {

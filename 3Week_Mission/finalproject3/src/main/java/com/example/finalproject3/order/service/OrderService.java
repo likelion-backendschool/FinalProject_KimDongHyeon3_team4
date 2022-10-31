@@ -187,7 +187,7 @@ public class OrderService {
     public boolean canRefund(Order order){
 
         LocalDateTime nowTime = LocalDateTime.now();
-        LocalDateTime orderTime = order.getCreateDate();
+        LocalDateTime orderTime = order.getPayDate();
 
         long time = Duration.between(nowTime, orderTime).toMinutes()*-1;
 
@@ -200,7 +200,7 @@ public class OrderService {
         return true;
     }
 
-    public List<OrderItem> findByCreateDateBetween(LocalDateTime fromDate, LocalDateTime toDate) {
-        return orderItemRepository.findByCreateDateBetween(fromDate, toDate);
+    public List<OrderItem> findByPayDateBetween(LocalDateTime fromDate, LocalDateTime toDate) {
+        return orderItemRepository.findByPayDateBetween(fromDate, toDate);
     }
 }

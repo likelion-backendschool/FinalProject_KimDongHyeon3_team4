@@ -27,8 +27,10 @@ public class AdmRebateService {
         System.out.println("fromDate = " + fromDate);
         System.out.println("toDate = " + toDate);
 
-        List<OrderItem> orderItems = orderService.findByCreateDateBetween(fromDate, toDate);
+        List<OrderItem> orderItems = orderService.findByPayDateBetween(fromDate, toDate);
 
         System.out.println("orderItems.size() = " + orderItems.size());
+
+
     }
 }
