@@ -1,15 +1,13 @@
-package com.example.finalproject3.member.entity;
+package com.example.finalproject3.revenue.entity;
 
+
+import com.example.finalproject3.rebate.entity.RebateOrderItem;
 import lombok.*;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import javax.persistence.*;
-import javax.persistence.Column;
-import javax.persistence.EntityListeners;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
 import java.time.LocalDateTime;
 
 @Entity
@@ -19,29 +17,14 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 @NoArgsConstructor
 @EntityListeners(AuditingEntityListener.class)
-public class Member {
+public class Revenue {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     Long id;
 
-    @Column
-    String username;
-
-    @Column
-    String password;
-
-    @Column
-    String email;
-
-    @Column
-    String nickname;
-
-    @Column
-    long restCash;
-
-    @Column
-    int authLevel;
+    @OneToOne
+    RebateOrderItem rebateOrderItem;
 
     @Column
     int revenue;
@@ -51,4 +34,5 @@ public class Member {
 
     @LastModifiedDate
     private LocalDateTime modifyDate;
+
 }

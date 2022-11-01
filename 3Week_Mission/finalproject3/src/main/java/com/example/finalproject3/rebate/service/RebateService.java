@@ -8,6 +8,7 @@ import com.example.finalproject3.order.entity.OrderItem;
 import com.example.finalproject3.order.service.OrderService;
 import com.example.finalproject3.rebate.entity.RebateOrderItem;
 import com.example.finalproject3.rebate.repository.RebateOrderItemRepository;
+import com.example.finalproject3.revenue.service.RevenueService;
 import com.example.finalproject3.util.Util;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -24,6 +25,7 @@ public class RebateService {
 
     private final OrderService orderService;
     private final MemberService memberService;
+    private final RevenueService revenueService;
     private final RebateOrderItemRepository rebateOrderItemRepository;
     public RsData createData(String yearMonth) {
 
@@ -90,6 +92,8 @@ public class RebateService {
         ).getData().getCashLog();
 
         rebateOrderItem.setRebateDone(cashLog.getId());
+
+        revenueService.addRevenue(rebateOrderItem);
 
         return RsData.of(
                 "S-1",

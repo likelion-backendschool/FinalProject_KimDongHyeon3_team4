@@ -3,6 +3,8 @@ package com.example.finalproject3.rebate.controller;
 import com.example.finalproject3.base.dto.RsData;
 import com.example.finalproject3.rebate.entity.RebateOrderItem;
 import com.example.finalproject3.rebate.service.RebateService;
+import com.example.finalproject3.revenue.entity.Revenue;
+import com.example.finalproject3.revenue.service.RevenueService;
 import com.example.finalproject3.util.Util;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -22,6 +24,7 @@ import java.util.List;
 public class RebateController {
 
     private final RebateService rebateService;
+    private final RevenueService revenueService;
 
     @GetMapping("/create")
     @PreAuthorize("hasAuthority('ADMIN')")
@@ -44,7 +47,7 @@ public class RebateController {
     @PreAuthorize("hasAuthority('ADMIN')")
     public String showList(String yearMonth, Model model) {
         if (yearMonth == null) {
-            yearMonth = "2022-10";
+            yearMonth = "2022-11";
         }
 
         List<RebateOrderItem> items = rebateService.findByPayDateIn(yearMonth);
@@ -90,6 +93,18 @@ public class RebateController {
 
         return redirect;
     }
+
+    @GetMapping("/revenue")
+    @PreAuthorize("hasAuthority('ADMIN')")
+    public String showRevenue(Model model) {
+
+        List<Revenue> revenues = revenueService.findAll();
+
+        model.addAttribute("revenues",revenues);
+
+        return "adm/rebate/revenue";
+    }
+
 
 
 }

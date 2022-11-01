@@ -55,10 +55,22 @@
                     사용자 홈
                 </span>
             </a>
+            <a href="/adm/home" class="inline-flex" sec:authorize="isAuthenticated()">
+                <i class="fa-solid fa-arrow-right-to-bracket"></i>
+                <span class="ml-[2px] hidden sm:block">
+                    관리자 홈
+                </span>
+            </a>
             <a href="/adm/rebate/create" class="inline-flex" sec:authorize="isAuthenticated()">
                 <i class="fa-solid fa-arrow-right-to-bracket"></i>
                 <span class="ml-[2px] hidden sm:block">
                     정산
+                </span>
+            </a>
+            <a href="/adm/rebate/revenue" class="inline-flex" sec:authorize="isAuthenticated()">
+                <i class="fa-solid fa-arrow-right-to-bracket"></i>
+                <span class="ml-[2px] hidden sm:block">
+                    수익
                 </span>
             </a>
             <a href="javascript: document.logoutForm.submit();" class="inline-flex" sec:authorize="isAuthenticated()">
