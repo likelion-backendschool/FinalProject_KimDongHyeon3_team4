@@ -1,14 +1,21 @@
 package com.example.finalproject3.member.service;
 
+import com.example.finalproject3.base.dto.RsData;
+import com.example.finalproject3.cash.entity.CashLog;
 import com.example.finalproject3.cash.service.CashService;
 import com.example.finalproject3.member.entity.Member;
 import com.example.finalproject3.member.repository.MemberRepository;
+import com.example.finalproject3.util.Util;
+import lombok.AllArgsConstructor;
+import lombok.Data;
 import lombok.RequiredArgsConstructor;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.Map;
 
 @Service
 @RequiredArgsConstructor
@@ -66,6 +73,29 @@ public class MemberService {
         memberRepository.save(member);
 
         return newRestCash;
+    }
+
+    @Transactional
+    public RsData<AddCashRsDataBody> addCashRebate(Member member, long price, String eventType) {
+
+        CashLog cashLog = cashService.addCash(member, price, eventType);
+
+        long newRestCash = member.getRestCash() + cashLog.getPrice();
+        member.setRestCash(newRestCash);
+        memberRepository.save(member);
+
+        return RsData.of(
+                "S-1",
+                "성공",
+                new AddCashRsDataBody(cashLog, newRestCash)
+        );
+    }
+
+    @Data
+    @AllArgsConstructor
+    public static class AddCashRsDataBody {
+        CashLog cashLog;
+        long newRestCash;
     }
 
     public long getRestCash(Member member) {

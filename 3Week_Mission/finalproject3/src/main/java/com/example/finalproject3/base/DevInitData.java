@@ -138,6 +138,7 @@ public class DevInitData {
 
             cartService.save(member1, product2);
             cartService.save(member1, product4);
+
             cartService.save(member2, product1);
             cartService.save(member2, product3);
 
@@ -148,11 +149,11 @@ public class DevInitData {
             memberService.addCash(member2, 2_000_000, "충전__무통장입금");
 
             Order order1 = orderService.createByCart(member1);
-
-            int order1PayPrice = order1.getPayPrice();
+            Order order2 = orderService.createByCart(member2);
 
             orderService.payByRestCash(order1);    //결제 모듈 없이 예치금으로 바로 결제
-            //orderService.refund(order1);
+            orderService.payByRestCash(order2);
+            orderService.refund(order1);
 
         };
     }

@@ -1,6 +1,9 @@
 package com.example.finalproject3.rebate.service;
 
 
+import com.example.finalproject3.base.dto.RsData;
+import com.example.finalproject3.cash.entity.CashLog;
+import com.example.finalproject3.member.service.MemberService;
 import com.example.finalproject3.order.entity.OrderItem;
 import com.example.finalproject3.order.service.OrderService;
 import com.example.finalproject3.rebate.entity.RebateOrderItem;
@@ -8,18 +11,21 @@ import com.example.finalproject3.rebate.repository.RebateOrderItemRepository;
 import com.example.finalproject3.util.Util;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
 public class RebateService {
 
-    private  final OrderService orderService;
+    private final OrderService orderService;
+    private final MemberService memberService;
     private final RebateOrderItemRepository rebateOrderItemRepository;
-    public void createData(String yearMonth) {
+    public RsData createData(String yearMonth) {
 
         int monthEndDay = Util.date.getEndDayOf(yearMonth);
 
@@ -38,6 +44,8 @@ public class RebateService {
 
         // 변환한 내용 정산 데이터로 변환
         rebateOrderItems.forEach(this::makeAmdRebateOrderItem);
+
+        return RsData.of("S-1", "정산데이터가 성공적으로 생성되었습니다.");
     }
 
     public void makeAmdRebateOrderItem(RebateOrderItem item) {
@@ -63,5 +71,32 @@ public class RebateService {
         LocalDateTime toDate = Util.date.parse(toDateStr);
 
         return rebateOrderItemRepository.findByPayDateBetweenOrderByIdAsc(fromDate, toDate);
+    }
+
+    @Transactional
+    public RsData rebate(long orderItemId) {
+        RebateOrderItem rebateOrderItem = rebateOrderItemRepository.findByOrderItemId(orderItemId).get();
+
+        if (rebateOrderItem.isRebateAvailable() == false) {
+            return RsData.of("F-1", "정산을 할 수 없는 상태입니다.");
+        }
+
+        int calculateRebatePrice = rebateOrderItem.getRebatePrice();
+
+        CashLog cashLog = memberService.addCashRebate(
+                rebateOrderItem.getProduct().getAuthor(),
+                calculateRebatePrice,
+                "정산__%d__지급__예치금".formatted(rebateOrderItem.getOrderItem().getId())
+        ).getData().getCashLog();
+
+        rebateOrderItem.setRebateDone(cashLog.getId());
+
+        return RsData.of(
+                "S-1",
+                "주문품목번호 %d번에 대해서 판매자에게 %s원 정산을 완료하였습니다.".formatted(rebateOrderItem.getOrderItem().getId(), calculateRebatePrice),
+                Util.mapOf(
+                        "cashLogId", cashLog.getId()
+                )
+        );
     }
 }

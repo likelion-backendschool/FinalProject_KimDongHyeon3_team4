@@ -35,4 +35,8 @@ public class CashLog {
 
     @LastModifiedDate
     private LocalDateTime modifyDate;
+
+    public CashLog(long id) {
+        this.id = id;
+    }
 }
