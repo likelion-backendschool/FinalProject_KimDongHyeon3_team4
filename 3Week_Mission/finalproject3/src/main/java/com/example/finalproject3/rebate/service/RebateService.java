@@ -50,14 +50,20 @@ public class RebateService {
         return RsData.of("S-1", "정산데이터가 성공적으로 생성되었습니다.");
     }
 
+    @Transactional
     public void makeAmdRebateOrderItem(RebateOrderItem item) {
         RebateOrderItem oldRebateOrderItem = rebateOrderItemRepository.findByOrderItemId(item.getOrderItem().getId()).orElse(null);
 
-        if (oldRebateOrderItem != null) {
-            rebateOrderItemRepository.delete(oldRebateOrderItem);
+//        if (oldRebateOrderItem != null) {
+//            revenueService.deleteByRebateOrderItem(oldRebateOrderItem);
+//            rebateOrderItemRepository.delete(oldRebateOrderItem);
+//        }
+
+        if (oldRebateOrderItem == null) {
+            rebateOrderItemRepository.save(item);
         }
 
-        rebateOrderItemRepository.save(item);
+
     }
 
     public RebateOrderItem toAdmRebateOrderItem(OrderItem orderItem) {
@@ -92,6 +98,8 @@ public class RebateService {
         ).getData().getCashLog();
 
         rebateOrderItem.setRebateDone(cashLog.getId());
+
+        rebateOrderItemRepository.save(rebateOrderItem);
 
         revenueService.addRevenue(rebateOrderItem);
 

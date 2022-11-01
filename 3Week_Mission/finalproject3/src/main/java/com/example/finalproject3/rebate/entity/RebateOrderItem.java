@@ -6,6 +6,7 @@ import com.example.finalproject3.member.entity.Member;
 import com.example.finalproject3.order.entity.Order;
 import com.example.finalproject3.order.entity.OrderItem;
 import com.example.finalproject3.product.entity.Product;
+import com.example.finalproject3.revenue.entity.Revenue;
 import lombok.*;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;

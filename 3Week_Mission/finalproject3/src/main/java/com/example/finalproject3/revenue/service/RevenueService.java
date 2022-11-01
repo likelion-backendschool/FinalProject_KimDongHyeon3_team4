@@ -5,6 +5,7 @@ import com.example.finalproject3.revenue.repository.RevenueRepository;
 import com.example.finalproject3.revenue.entity.Revenue;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -38,5 +39,10 @@ public class RevenueService {
         }
 
         return totalRevenue;
+    }
+
+    @Transactional
+    public void deleteByRebateOrderItem(RebateOrderItem oldRebateOrderItem) {
+        revenueRepository.deleteByRebateOrderItem(oldRebateOrderItem);
     }
 }
