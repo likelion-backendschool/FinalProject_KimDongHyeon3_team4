@@ -55,12 +55,19 @@ public class RebateOrderItem {
     @JoinColumn(foreignKey = @ForeignKey(ConstraintMode.NO_CONSTRAINT))
     private CashLog rebateCashLog; // 정산에 관련된 환급지급내역
 
-    // 회원
+    // 구매자
     @ManyToOne
     @ToString.Exclude
     @JoinColumn(foreignKey = @ForeignKey(ConstraintMode.NO_CONSTRAINT))
     private Member buyer;
     private String buyerName;
+
+    //판매자
+    @ManyToOne
+    @ToString.Exclude
+    @JoinColumn(foreignKey = @ForeignKey(ConstraintMode.NO_CONSTRAINT))
+    private Member seller;
+    private String sellerName;
 
     // 가격
     private int price; // 소비가
@@ -99,5 +106,8 @@ public class RebateOrderItem {
 
         buyer = orderItem.getOrder().getMember();
         buyerName = orderItem.getOrder().getMember().getUsername();
+
+        seller = orderItem.getProduct().getAuthor();
+        sellerName = orderItem.getProduct().getAuthor().getUsername();
     }
 }
