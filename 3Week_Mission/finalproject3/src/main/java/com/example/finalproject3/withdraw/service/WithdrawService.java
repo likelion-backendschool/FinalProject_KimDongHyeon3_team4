@@ -31,4 +31,8 @@ public class WithdrawService {
     public List<Withdraw> findByMember(Member member) {
         return withdrawRepository.findByMember(member);
     }
+
+    public List<Withdraw> findAll() {
+        return withdrawRepository.findAll();
+    }
 }

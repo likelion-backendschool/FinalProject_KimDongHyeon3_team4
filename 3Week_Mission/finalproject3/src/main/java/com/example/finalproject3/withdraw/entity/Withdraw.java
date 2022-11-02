@@ -43,4 +43,11 @@ public class Withdraw {
 
     @LastModifiedDate
     private LocalDateTime modifyDate;
+
+    public boolean withdrawAvailable(){
+        if(isWithdraw == true || price > member.getRestCash())
+            return false;
+
+        return true;
+    }
 }

@@ -73,6 +73,12 @@
                     수익
                 </span>
             </a>
+            <a href="/adm/withdraw/applyList" class="inline-flex" sec:authorize="isAuthenticated()">
+                <i class="fa-solid fa-arrow-right-to-bracket"></i>
+                <span class="ml-[2px] hidden sm:block">
+                    출금 정산
+                </span>
+            </a>
             <a href="javascript: document.logoutForm.submit();" class="inline-flex" sec:authorize="isAuthenticated()">
                 <i class="fa-solid fa-arrow-right-from-bracket"></i>
                 <span class="ml-[2px] hidden sm:block">
