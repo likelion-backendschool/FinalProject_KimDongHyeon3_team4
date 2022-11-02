@@ -35,6 +35,9 @@ public class Withdraw {
     @Column
     int price;
 
+    @Column
+    boolean isWithdraw;
+
     @CreatedDate
     private LocalDateTime createDate;
 

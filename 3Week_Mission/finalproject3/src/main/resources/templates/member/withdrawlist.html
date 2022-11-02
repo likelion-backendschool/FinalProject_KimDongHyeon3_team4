@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html layout:decorate="~{layout/layout.html}">
+
+<head>
+    <title>출금 내역</title>
+</head>
+
+<body>
+<main layout:fragment="main">
+    <section class="section section-join flex-grow flex flex-col items-center justify-center">
+
+        <table class="table">
+            <thead class="table-dark">
+            <tr class="text-center">
+                <th>출금번호</th>
+                <th>출금인</th>
+                <th>출금은행</th>
+                <th>출금계좌</th>
+                <th>출금액</th>
+                <th>신청일자</th>
+                <th>출금신청현황</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr class="text-center" th:each="withdraw : ${withdraws}">
+                <td th:text="${withdraw.id}"></td>
+                <td th:text="${withdraw.member.username}"></td>
+                <td th:text="${withdraw.bankName}"></td>
+                <td th:text="${withdraw.bankAccountNo}"></td>
+                <td th:text="${withdraw.price}"></td>
+                <td th:text="${#temporals.format(withdraw.createDate, 'yy-MM-dd HH:mm')}"></td>
+                <td th:text="${withdraw.isWithdraw ? '출금완료' : '대기'}">
+
+                </td>
+            </tr>
+            </tbody>
+        </table>
+
+    </section>
+</main>
+</body>
+</html>

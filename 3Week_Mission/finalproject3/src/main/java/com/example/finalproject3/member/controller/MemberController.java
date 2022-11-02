@@ -10,6 +10,7 @@ import com.example.finalproject3.order.service.OrderService;
 import com.example.finalproject3.security.dto.SecurityMember;
 import com.example.finalproject3.security.service.SecurityMemberService;
 import com.example.finalproject3.util.Util;
+import com.example.finalproject3.withdraw.entity.Withdraw;
 import com.example.finalproject3.withdraw.service.WithdrawService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -237,6 +238,19 @@ public class MemberController {
         withdrawService.save(bankName, bankAccountNo, price, member);
 
         return "redirect:/member/profile?msg=" + Util.url.encode("%d원 출금 신청이 되었습니다.".formatted(price));
+    }
+
+    @GetMapping("/withdraw/list")
+    public String showWithdrawList(@AuthenticationPrincipal SecurityMember securityMember,
+                                    Model model){
+
+        Member member = securityMember.getMember();
+
+        List<Withdraw> withdraws = withdrawService.findByMember(member);
+
+        model.addAttribute("withdraws", withdraws);
+
+        return "/member/withdrawlist";
     }
 
     protected Authentication createNewAuthentication(Authentication currentAuth, String username) {

@@ -8,6 +8,8 @@ import lombok.RequiredArgsConstructor;
 import lombok.With;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 @RequiredArgsConstructor
 public class WithdrawService {
@@ -15,7 +17,6 @@ public class WithdrawService {
     private final WithdrawRepository withdrawRepository;
 
     public void save(String bankName, String bankAccountNo, int price, Member member) {
-
 
         Withdraw withdraw = Withdraw.builder()
                 .member(member)
@@ -25,5 +26,9 @@ public class WithdrawService {
                 .build();
 
         withdrawRepository.save(withdraw);
+    }
+
+    public List<Withdraw> findByMember(Member member) {
+        return withdrawRepository.findByMember(member);
     }
 }
