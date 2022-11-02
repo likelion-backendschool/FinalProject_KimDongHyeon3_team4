@@ -50,4 +50,8 @@ public class Withdraw {
 
         return true;
     }
+
+    public void withdrawDone(){
+        isWithdraw = true;
+    }
 }

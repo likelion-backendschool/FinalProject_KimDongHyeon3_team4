@@ -91,6 +91,22 @@ public class MemberService {
         );
     }
 
+    @Transactional
+    public RsData<AddCashRsDataBody> withdrawCash(Member member, long price, String eventType) {
+
+        CashLog cashLog = cashService.addCash(member, price, eventType);
+
+        long newRestCash = member.getRestCash() + cashLog.getPrice();
+        member.setRestCash(newRestCash);
+        memberRepository.save(member);
+
+        return RsData.of(
+                "S-2",
+                "성공",
+                new AddCashRsDataBody(cashLog, newRestCash)
+        );
+    }
+
     @Data
     @AllArgsConstructor
     public static class AddCashRsDataBody {
