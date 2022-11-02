@@ -21,10 +21,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
@@ -211,13 +208,38 @@ public class MemberController {
         return new ResponseEntity<>("Success",HttpStatus.OK);
     }
 
+    @GetMapping("/withdraw/apply")
+    public String showWithdrawApply(@AuthenticationPrincipal SecurityMember securityMember,
+                                    Model model){
+
+        Member member = securityMember.getMember();
+
+        model.addAttribute("member", member);
+
+        return "/member/withdraw";
+    }
+
+    @PostMapping("/withdraw/apply")
+    @ResponseBody
+    public String withdrawApply(@AuthenticationPrincipal SecurityMember securityMember,
+                                Model model,
+                                String bankName,
+                                String bankAccountNo,
+                                int price){
+
+        log.info("bankname = {} ", bankName);
+        log.info("bankAccountNo = {} ", bankAccountNo);
+        log.info("price = {} ", price);
+
+        return "성공";
+    }
+
     protected Authentication createNewAuthentication(Authentication currentAuth, String username) {
 
         SecurityMember newPrincipal = (SecurityMember) securityMemberService.loadUserByUsername(username);
         UsernamePasswordAuthenticationToken newAuth = new UsernamePasswordAuthenticationToken(newPrincipal, currentAuth.getCredentials(), newPrincipal.getAuthorities());
         newAuth.setDetails(currentAuth.getDetails());
         return newAuth;
-
     }
 
 }
