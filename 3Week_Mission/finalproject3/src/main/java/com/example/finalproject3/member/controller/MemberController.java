@@ -10,6 +10,7 @@ import com.example.finalproject3.order.service.OrderService;
 import com.example.finalproject3.security.dto.SecurityMember;
 import com.example.finalproject3.security.service.SecurityMemberService;
 import com.example.finalproject3.util.Util;
+import com.example.finalproject3.withdraw.service.WithdrawService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -38,6 +39,7 @@ public class MemberController {
 
     private final MemberService memberService;
     private final SecurityMemberService securityMemberService;
+    private final WithdrawService withdrawService;
     private final PasswordEncoder passwordEncoder;
     private final MyBookService myBookService;
     private final OrderService orderService;
@@ -208,6 +210,7 @@ public class MemberController {
         return new ResponseEntity<>("Success",HttpStatus.OK);
     }
 
+
     @GetMapping("/withdraw/apply")
     public String showWithdrawApply(@AuthenticationPrincipal SecurityMember securityMember,
                                     Model model){
@@ -220,18 +223,20 @@ public class MemberController {
     }
 
     @PostMapping("/withdraw/apply")
-    @ResponseBody
     public String withdrawApply(@AuthenticationPrincipal SecurityMember securityMember,
-                                Model model,
                                 String bankName,
                                 String bankAccountNo,
                                 int price){
 
-        log.info("bankname = {} ", bankName);
-        log.info("bankAccountNo = {} ", bankAccountNo);
-        log.info("price = {} ", price);
+        Member member = securityMember.getMember();
 
-        return "성공";
+        if(member.getRestCash() < price){
+            return "redirect:/member/withdraw/apply?msg=" + Util.url.encode("예치금이 부족합니다.");
+        }
+
+        withdrawService.save(bankName, bankAccountNo, price, member);
+
+        return "redirect:/member/profile?msg=" + Util.url.encode("%d원 출금 신청이 되었습니다.".formatted(price));
     }
 
     protected Authentication createNewAuthentication(Authentication currentAuth, String username) {

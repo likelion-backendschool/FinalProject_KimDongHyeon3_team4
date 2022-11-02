@@ -27,6 +27,12 @@ public class Withdraw {
     Member member;
 
     @Column
+    String bankName;
+
+    @Column
+    String bankAccountNo;
+
+    @Column
     int price;
 
     @CreatedDate
