@@ -1,4 +1,5 @@
-package com.example.finalproject3.cash.entity;
+package com.example.finalproject3.withdraw.entity;
+
 
 import com.example.finalproject3.member.entity.Member;
 import lombok.*;
@@ -16,7 +17,8 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 @NoArgsConstructor
 @EntityListeners(AuditingEntityListener.class)
-public class CashLog {
+public class Withdraw {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     Long id;
@@ -25,10 +27,16 @@ public class CashLog {
     Member member;
 
     @Column
-    long price;
+    String bankName;
 
     @Column
-    String eventType;
+    String bankAccountNo;
+
+    @Column
+    int price;
+
+    @Column
+    boolean isWithdraw;
 
     @CreatedDate
     private LocalDateTime createDate;
@@ -36,7 +44,14 @@ public class CashLog {
     @LastModifiedDate
     private LocalDateTime modifyDate;
 
-    public CashLog(long id) {
-        this.id = id;
+    public boolean withdrawAvailable(){
+        if(isWithdraw == true || price > member.getRestCash())
+            return false;
+
+        return true;
+    }
+
+    public void withdrawDone(){
+        isWithdraw = true;
     }
 }

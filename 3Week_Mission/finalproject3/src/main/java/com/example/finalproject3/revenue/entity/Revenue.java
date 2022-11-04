@@ -1,6 +1,7 @@
-package com.example.finalproject3.cash.entity;
+package com.example.finalproject3.revenue.entity;
 
-import com.example.finalproject3.member.entity.Member;
+
+import com.example.finalproject3.rebate.entity.RebateOrderItem;
 import lombok.*;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
@@ -16,19 +17,17 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 @NoArgsConstructor
 @EntityListeners(AuditingEntityListener.class)
-public class CashLog {
+public class Revenue {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     Long id;
 
-    @ManyToOne
-    Member member;
+    @OneToOne
+    RebateOrderItem rebateOrderItem;
 
     @Column
-    long price;
-
-    @Column
-    String eventType;
+    int revenue;
 
     @CreatedDate
     private LocalDateTime createDate;
@@ -36,7 +35,4 @@ public class CashLog {
     @LastModifiedDate
     private LocalDateTime modifyDate;
 
-    public CashLog(long id) {
-        this.id = id;
-    }
 }

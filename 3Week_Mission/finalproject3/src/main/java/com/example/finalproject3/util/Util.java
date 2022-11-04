@@ -3,8 +3,56 @@ package com.example.finalproject3.util;
 
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.util.Arrays;
+import java.util.LinkedHashMap;
+import java.util.Map;
 
 public class Util {
+
+    public static <K, V> Map<K, V> mapOf(Object... args) {
+        Map<K, V> map = new LinkedHashMap<>();
+
+        int size = args.length / 2;
+
+        for (int i = 0; i < size; i++) {
+            int keyIndex = i * 2;
+            int valueIndex = keyIndex + 1;
+
+            K key = (K) args[keyIndex];
+            V value = (V) args[valueIndex];
+
+            map.put(key, value);
+        }
+
+        return map;
+    }
+
+    public static class date {
+        public static int getEndDayOf(int year, int month) {
+            String yearMonth = year + "-" + "%02d".formatted(month);
+
+            return getEndDayOf(yearMonth);
+        }
+
+        public static int getEndDayOf(String yearMonth) {
+            LocalDate convertedDate = LocalDate.parse(yearMonth + "-01", DateTimeFormatter.ofPattern("yyyy-MM-dd"));
+            convertedDate = convertedDate.withDayOfMonth(
+                    convertedDate.getMonth().length(convertedDate.isLeapYear()));
+
+            return convertedDate.getDayOfMonth();
+        }
+
+        public static LocalDateTime parse(String pattern, String dateText) {
+            return LocalDateTime.parse(dateText, DateTimeFormatter.ofPattern(pattern));
+        }
+
+        public static LocalDateTime parse(String dateText) {
+            return parse("yyyy-MM-dd HH:mm:ss.SSSSSS", dateText);
+        }
+    }
 
     public static class url {
         public static boolean isUrl(String url) {
@@ -15,6 +63,10 @@ public class Util {
         public static String addQueryParam(String url, String paramName, String paramValue) {
             if (url.contains("?") == false) {
                 url += "?";
+            }
+
+            if ( url.endsWith("?") == false && url.endsWith("&") == false ) {
+                url += "&";
             }
 
             url += paramName + "=" + encode(paramValue);
@@ -50,6 +102,25 @@ public class Util {
             } catch (UnsupportedEncodingException e) {
                 return str;
             }
+        }
+
+        public static String getQueryParamValue(String url, String paramName, String defaultValue) {
+            String[] urlBits = url.split("\\?", 2);
+
+            if (urlBits.length == 1) {
+                return defaultValue;
+            }
+
+            urlBits = urlBits[1].split("&");
+
+            String param = Arrays.stream(urlBits)
+                    .filter(s -> s.startsWith(paramName + "="))
+                    .findAny()
+                    .orElse(paramName + "=" + defaultValue);
+
+            String value = param.split("=", 2)[1].trim();
+
+            return value.length() > 0 ? value : defaultValue;
         }
     }
 }

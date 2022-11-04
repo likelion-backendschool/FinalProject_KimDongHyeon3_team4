@@ -10,6 +10,8 @@ import com.example.finalproject3.order.service.OrderService;
 import com.example.finalproject3.security.dto.SecurityMember;
 import com.example.finalproject3.security.service.SecurityMemberService;
 import com.example.finalproject3.util.Util;
+import com.example.finalproject3.withdraw.entity.Withdraw;
+import com.example.finalproject3.withdraw.service.WithdrawService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -21,10 +23,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
@@ -41,6 +40,7 @@ public class MemberController {
 
     private final MemberService memberService;
     private final SecurityMemberService securityMemberService;
+    private final WithdrawService withdrawService;
     private final PasswordEncoder passwordEncoder;
     private final MyBookService myBookService;
     private final OrderService orderService;
@@ -211,13 +211,54 @@ public class MemberController {
         return new ResponseEntity<>("Success",HttpStatus.OK);
     }
 
+
+    @GetMapping("/withdraw/apply")
+    public String showWithdrawApply(@AuthenticationPrincipal SecurityMember securityMember,
+                                    Model model){
+
+        Member member = securityMember.getMember();
+
+        model.addAttribute("member", member);
+
+        return "/member/withdraw";
+    }
+
+    @PostMapping("/withdraw/apply")
+    public String withdrawApply(@AuthenticationPrincipal SecurityMember securityMember,
+                                String bankName,
+                                String bankAccountNo,
+                                int price){
+
+        Member member = securityMember.getMember();
+
+        if(member.getRestCash() < price){
+            return "redirect:/member/withdraw/apply?msg=" + Util.url.encode("예치금이 부족합니다.");
+        }
+
+        withdrawService.save(bankName, bankAccountNo, price, member);
+
+        return "redirect:/member/profile?msg=" + Util.url.encode("%d원 출금 신청이 되었습니다.".formatted(price));
+    }
+
+    @GetMapping("/withdraw/list")
+    public String showWithdrawList(@AuthenticationPrincipal SecurityMember securityMember,
+                                    Model model){
+
+        Member member = securityMember.getMember();
+
+        List<Withdraw> withdraws = withdrawService.findByMember(member);
+
+        model.addAttribute("withdraws", withdraws);
+
+        return "/member/withdrawlist";
+    }
+
     protected Authentication createNewAuthentication(Authentication currentAuth, String username) {
 
         SecurityMember newPrincipal = (SecurityMember) securityMemberService.loadUserByUsername(username);
         UsernamePasswordAuthenticationToken newAuth = new UsernamePasswordAuthenticationToken(newPrincipal, currentAuth.getCredentials(), newPrincipal.getAuthorities());
         newAuth.setDetails(currentAuth.getDetails());
         return newAuth;
-
     }
 
 }

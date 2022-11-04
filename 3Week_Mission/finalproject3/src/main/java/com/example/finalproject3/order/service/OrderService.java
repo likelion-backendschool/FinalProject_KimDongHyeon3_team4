@@ -7,6 +7,7 @@ import com.example.finalproject3.member.service.MemberService;
 import com.example.finalproject3.mybook.service.MyBookService;
 import com.example.finalproject3.order.entity.Order;
 import com.example.finalproject3.order.entity.OrderItem;
+import com.example.finalproject3.order.repository.OrderItemRepository;
 import com.example.finalproject3.order.repository.OrderRepository;
 import com.example.finalproject3.product.entity.Product;
 import lombok.RequiredArgsConstructor;
@@ -29,6 +30,7 @@ public class OrderService {
     private final OrderRepository orderRepository;
     private final MemberService memberService;
     private final MyBookService myBookService;
+    private final OrderItemRepository orderItemRepository;
 
     public Order createByRestCash(Member member) {
         List<OrderItem> orderItems = new ArrayList<>();
@@ -185,7 +187,7 @@ public class OrderService {
     public boolean canRefund(Order order){
 
         LocalDateTime nowTime = LocalDateTime.now();
-        LocalDateTime orderTime = order.getCreateDate();
+        LocalDateTime orderTime = order.getPayDate();
 
         long time = Duration.between(nowTime, orderTime).toMinutes()*-1;
 
@@ -196,5 +198,9 @@ public class OrderService {
         }
 
         return true;
+    }
+
+    public List<OrderItem> findByPayDateBetween(LocalDateTime fromDate, LocalDateTime toDate) {
+        return orderItemRepository.findByPayDateBetween(fromDate, toDate);
     }
 }

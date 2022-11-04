@@ -34,7 +34,6 @@ import java.util.Map;
 @RequestMapping("/order")
 public class OrderController {
 
-    private final SecurityMemberService securityMemberService;
     private final ProductService productService;
     private final RestTemplate restTemplate = new RestTemplate();
     private final ObjectMapper objectMapper;
@@ -116,7 +115,7 @@ public class OrderController {
         return "redirect:/product/list?msg=%s".formatted(Util.url.encode("예치금으로 결제했습니다."));
     }
 
-    @GetMapping("/{orderId}/cancle")  //개별 결제
+    @GetMapping("/{orderId}/cancle")  //취소
     public String cancelOrder(@AuthenticationPrincipal SecurityMember securityMember,
                               @PathVariable long orderId){
 
@@ -127,7 +126,7 @@ public class OrderController {
         return "redirect:/product/list?msg=" + Util.url.encode("%d의 주문이 취소되었습니다.".formatted(order.getId()));
     }
 
-    @GetMapping("/{orderId}/refund")  //개별 결제
+    @GetMapping("/{orderId}/refund")  //환불
     public String refundOrder(@AuthenticationPrincipal SecurityMember securityMember,
                               @PathVariable long orderId){
 

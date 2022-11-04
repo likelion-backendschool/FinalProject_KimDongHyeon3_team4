@@ -12,6 +12,7 @@ import com.example.finalproject3.post.repository.PostRepository;
 import com.example.finalproject3.post.service.PostService;
 import com.example.finalproject3.product.entity.Product;
 import com.example.finalproject3.product.repository.ProductRepository;
+import com.example.finalproject3.withdraw.service.WithdrawService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.CommandLineRunner;
@@ -36,7 +37,8 @@ public class DevInitData {
                            KeywordService keywordService,
                            ProductRepository productRepository,
                            CartService cartService,
-                           OrderService orderService) {
+                           OrderService orderService,
+                           WithdrawService withdrawService) {
         return args -> {
             memberRepository.save(Member.builder()
                     .username("admin")
@@ -138,6 +140,7 @@ public class DevInitData {
 
             cartService.save(member1, product2);
             cartService.save(member1, product4);
+
             cartService.save(member2, product1);
             cartService.save(member2, product3);
 
@@ -148,11 +151,16 @@ public class DevInitData {
             memberService.addCash(member2, 2_000_000, "충전__무통장입금");
 
             Order order1 = orderService.createByCart(member1);
-
-            int order1PayPrice = order1.getPayPrice();
+            Order order2 = orderService.createByCart(member2);
 
             orderService.payByRestCash(order1);    //결제 모듈 없이 예치금으로 바로 결제
-            //orderService.refund(order1);
+            orderService.payByRestCash(order2);
+            orderService.refund(order1);
+
+
+
+            withdrawService.save("우리은행","1002156314175", 5000, member2);
+            withdrawService.save("국민은행","1002156314175", 5000, member1);
 
         };
     }
