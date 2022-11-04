@@ -104,6 +104,11 @@ public class MemberService {
         );
     }
 
+    public Member findById(Long id) {
+        return memberRepository.findById(id).orElse(null);
+    }
+
+
     @Data
     @AllArgsConstructor
     public static class AddCashRsDataBody {
