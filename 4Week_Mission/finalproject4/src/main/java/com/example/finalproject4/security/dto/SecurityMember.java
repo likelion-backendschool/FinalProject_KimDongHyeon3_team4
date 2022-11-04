@@ -32,6 +32,18 @@ public class SecurityMember extends User {
         this.restCash = member.getRestCash();
     }
 
+    public SecurityMember(Member member) {
+        super(member.getUsername(), member.getPassword(), member.getAuthorities());
+        this.id = member.getId();
+        this.createDate = member.getCreateDate();
+        this.modifyDate = member.getModifyDate();
+        this.username = member.getUsername();
+        this.email = member.getEmail();
+        this.nickname = member.getNickname();
+        this.authLevel = member.getAuthLevel();
+        this.restCash = member.getRestCash();
+    }
+
     public String getName() {
         return getUsername();
     }
