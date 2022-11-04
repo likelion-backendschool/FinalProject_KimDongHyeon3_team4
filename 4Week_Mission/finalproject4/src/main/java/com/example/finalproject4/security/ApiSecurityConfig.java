@@ -37,7 +37,7 @@ public class ApiSecurityConfig {
                 .authorizeRequests(
                         authorizeRequests -> authorizeRequests
                                 .antMatchers("/api/*/member/login").permitAll()
-                                .antMatchers("/api/*/member/me").permitAll()
+                                //.antMatchers("/api/*/member/me").permitAll()
                                 .anyRequest()
                                 .authenticated() // 최소자격 : 로그인
                 )

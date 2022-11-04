@@ -71,6 +71,10 @@ public class ApiMemberController {
 //            return Util.spring.responseEntityOf(RsData.failOf(null));
 //        }
 
+        Member member = securityMember.getMember();
+
+        log.info("로그인된 사용자 이름 = {}", member.getUsername());
+
         return Util.spring.responseEntityOf(RsData.successOf("성공성공"));
     }
 }

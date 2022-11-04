@@ -41,6 +41,8 @@ public class JwtAuthorizationFilter extends OncePerRequestFilter {
                 String username = (String) claims.get("username");
                 Member member = memberService.findByUsername(username);
 
+                if(member == null) throw new RuntimeException("멤버가 null이네요");
+
                 forceAuthentication(member);
             }
         }
