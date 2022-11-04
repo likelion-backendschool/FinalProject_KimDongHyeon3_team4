@@ -212,5 +212,3 @@ public void makeAmdRebateOrderItem(RebateOrderItem item) {
 또한 정산 데이터의 경우 주문된 데이터를 기반으로 만들어 지기 때문에
 환불, 취소된 주문의 데이터만 걸러서 만들면 되기 때문에
 굳이 Delete를 할 필요가 없어 본인다.
-
-

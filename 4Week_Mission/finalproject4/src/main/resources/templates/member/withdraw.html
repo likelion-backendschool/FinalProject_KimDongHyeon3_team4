@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html layout:decorate="~{layout/layout.html}">
+
+<head>
+    <title>예치금 전환</title>
+</head>
+
+<body>
+<main layout:fragment="main">
+    <section class="section section-login flex-grow flex flex-col items-center justify-center">
+
+        <div class="max-w-md w-full px-2 pt-4">
+            <h1 class="font-bold text-lg">예치금 전환</h1>
+
+            <form th:action method="POST" class="flex flex-col gap-3" onsubmit="CashTramsform__submit(this); return false;">
+                <div class="form-control">
+                    <label class="label">
+                        <span class="label-text">은행</span>
+                    </label>
+                    <input autofocus type="text" name="bankName" placeholder="은행" class="input input-bordered" maxlength="50">
+                </div>
+
+                <div class="form-control">
+                    <label class="label">
+                        <span class="label-text">계좌번호</span>
+                    </label>
+                    <input type="text" name="bankAccountNo"
+                           placeholder="계좌번호" class="input input-bordered" maxlength="50">
+                </div>
+
+                <div>
+                    보유 예치금 : [[${member.getRestCash}]]
+                </div>
+                <div th:with="maxUseRestCash = ${member.getRestCash}">
+                    <span>사용할 예치금 : </span>
+                    <input type="number" id="PaymentForm__useRestCash"
+                           name="price"
+                           th:placeholder="|0 ~ ${maxUseRestCash}|"
+                           class="input input-bordered min-w-[300px]" min="0" th:max="${maxUseRestCash}"
+                           onkeydown="PaymentForm__useRestCashFix();"
+                           onkeyup="PaymentForm__useRestCashFix();"
+                    >
+                    <label class="inline-flex items-center ml-3">
+                        <span>전액출금</span>
+                        <input onchange="PaymentForm__useRestCashAllChanged();" id="PaymentForm__useRestCashAll"
+                               type="checkbox" class="ml-2 checkbox">
+                    </label>
+                </div>
+
+                <div class="grid grid-cols-2 mt-2 gap-2">
+                    <input class="btn btn-primary" type="submit" value="출금신청">
+                </div>
+            </form>
+        </div>
+        </div>
+
+
+        <script>
+
+            const $PaymentForm__useRestCash = $("#PaymentForm__useRestCash");
+            const $PaymentForm__useRestCashAll = $("#PaymentForm__useRestCashAll");
+
+            function CashTramsform__submit(form) {
+
+                let useRestCash = parseInt($PaymentForm__useRestCash.val());
+
+                form.bankName.value = form.bankName.value.trim();
+                if (form.bankName.value.length == 0) {
+                    warningModal("은행 입력해주세요.");
+                    form.bankName.focus();
+                    return;
+                }
+
+                form.bankAccountNo.value = form.bankAccountNo.value.trim();
+                if (form.bankAccountNo.value.length == 0) {
+                    warningModal("계좌번호를 입력해주세요.");
+                    form.bankAccountNo.focus();
+                    return;
+                }
+
+                form.price.value = form.price.value.trim();
+                if (form.price.value == 0) {
+                    warningModal("출금액을 입력해주세요.");
+                    form.price.focus();
+                    return;
+                }
+
+                form.submit();
+            }
+        </script>
+
+        <script>
+            function PaymentForm__useRestCashFix() {
+                let useRestCash = parseInt($PaymentForm__useRestCash.val());
+
+                if (isNaN(useRestCash)) {
+                    useRestCash = 0;
+                }
+
+                const maxUseRestCash = parseInt($PaymentForm__useRestCash.attr('max'));
+
+                if (useRestCash < 0) {
+                    useRestCash = 0;
+                    $PaymentForm__useRestCash.val(0);
+                }
+
+                if (useRestCash > maxUseRestCash) {
+                    useRestCash = maxUseRestCash;
+                    $PaymentForm__useRestCash.val(maxUseRestCash);
+                }
+
+                if ( useRestCash == maxUseRestCash ) {
+                    $PaymentForm__useRestCashAll.prop('checked', true);
+                }
+                else {
+                    $PaymentForm__useRestCashAll.prop('checked', false);
+                }
+
+            }
+
+            function PaymentForm__useRestCashAllChanged() {
+                if ( $PaymentForm__useRestCashAll.prop('checked') ) {
+                    const maxUseRestCash = parseInt($PaymentForm__useRestCash.attr('max'));
+                    $PaymentForm__useRestCash.val(maxUseRestCash);
+                }
+                else {
+                    $PaymentForm__useRestCash.val(0);
+                }
+
+                PaymentForm__useRestCashFix();
+            }
+
+            PaymentForm__useRestCashFix();
+        </script>
+
+    </section>
+
+</main>
+</body>
+</html>

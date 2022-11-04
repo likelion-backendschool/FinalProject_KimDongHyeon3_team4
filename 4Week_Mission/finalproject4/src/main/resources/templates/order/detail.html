@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html layout:decorate="~{layout/layout.html}">
+
+<head>
+    <title>주문 상세내용</title>
+</head>
+
+<body>
+<main layout:fragment="main">
+    <section class="section section-join flex-grow flex flex-col items-center justify-center">
+
+        <script src="https://js.tosspayments.com/v1"></script>
+
+        <script th:inline="javascript">
+            const orderId = /*[[ ${order.id} ]]*/ null;
+            const buyerName = /*[[ ${order.member.username} ]]*/ null;
+            const orderName = /*[[ ${order.name} ]]*/ null;
+            const orderPayPrice = /*[[ ${order.getPayPrice} ]]*/ null;
+        </script>
+
+        <form hidden name="payByRestCashOnlyForm"
+              method="POST"
+              th:action="@{|/order/${order.id}/payByRestCash|}">
+        </form>
+
+        <div class="px-2 pt-4">
+            <h1 class="font-bold text-lg">주문 상세내용</h1>
+
+            <div class="flex flex-col gap-3 mt-3">
+                <div>
+                    주문번호 : [[${order.id}]]
+                </div>
+
+                <div>
+                    주문날짜 : [[${order.createDate}]]
+                </div>
+
+                <div>
+                    주문자 : [[${order.member.username}]]
+                </div>
+
+                <div>
+                    주문가격 : [[${order.getPayPrice}]]
+                </div>
+
+                <div>
+                    <table class="table">
+                        <thead class="table-dark">
+                        <tr class="text-center">
+                            <th>번호</th>
+                            <th>이미지</th>
+                            <th style="width:50%">도서명</th>
+                            <th>글쓴이</th>
+                            <th>가격</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr class="text-center" th:each="orderItem : ${order.orderItems}">
+                            <td th:text="${orderItem.product.id}"></td>
+
+                            <td>
+                                <svg width="80" height="80" th:data-jdenticon-value="${orderItem.product.jdenticon}"></svg>
+                            </td>
+
+                            <td class="text-start">
+                                <span th:text="${orderItem.product.subject}"></span>
+                            </td>
+
+                            <td><span th:text="${orderItem.product.author.username}"></span></td>
+
+                            <td><span th:text="${orderItem.salePrice}"></span></td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div>
+                    보유 예치금 : [[${restCash}]]
+                </div>
+                <div th:with="maxUseRestCash = ${order.getPayPrice > restCash ? restCash : order.getPayPrice}">
+                    <span>사용할 예치금 : </span>
+                    <input type="number" id="PaymentForm__useRestCash"
+                           th:placeholder="|0 ~ ${maxUseRestCash}|"
+                           class="input input-bordered min-w-[300px]" min="0" th:max="${maxUseRestCash}"
+                           onkeydown="PaymentForm__useRestCashFix();"
+                           onkeyup="PaymentForm__useRestCashFix();"
+                    >
+                    <label class="inline-flex items-center ml-3">
+                        <span>전액사용</span>
+                        <input onchange="PaymentForm__useRestCashAllChanged();" id="PaymentForm__useRestCashAll"
+                               type="checkbox" class="ml-2 checkbox">
+                    </label>
+                </div>
+
+                <div>
+                    <button onclick="payment();" class="btn btn-sm btn-primary">결제</button>
+                    <a th:href="@{|/order/${order.id}/cancle|}" class="btn btn-sm btn-primary">취소</a>
+                </div>
+            </div>
+        </div>
+
+        <script>
+
+            const $PaymentForm__useRestCash = $("#PaymentForm__useRestCash");
+            const $PaymentForm__useRestCashAll = $("#PaymentForm__useRestCashAll");
+            const $PaymentForm__pgPayPriceDisplay = $("#PaymentForm__pgPayPriceDisplay");
+
+            const tossPayments = TossPayments("test_ck_ZORzdMaqN3wwW6vbzZD35AkYXQGw");
+
+
+
+            function payment() {
+
+                let useRestCash = parseInt($PaymentForm__useRestCash.val());
+
+                if (orderPayPrice == useRestCash) {
+                    document.payByRestCashOnlyForm.submit();
+                    return;
+                }
+
+                const method = "카드"; // "카드" 혹은 "가상계좌"
+
+                const paymentData = {
+                    amount: orderPayPrice - useRestCash,
+                    orderId: "order__" + orderId + "__" + (Math.random() + "").substring(2),
+                    orderName,
+                    customerName: buyerName,
+                    successUrl: window.location.origin + "/order/" + orderId + "/success",
+                    failUrl: window.location.origin + "/order/" + orderId + "/fail"
+                };
+
+                tossPayments.requestPayment(method, paymentData);
+            }
+        </script>
+
+        <script>
+            function PaymentForm__useRestCashFix() {
+                let useRestCash = parseInt($PaymentForm__useRestCash.val());
+
+                if (isNaN(useRestCash)) {
+                    useRestCash = 0;
+                }
+
+                const maxUseRestCash = parseInt($PaymentForm__useRestCash.attr('max'));
+
+                if (useRestCash < 0) {
+                    useRestCash = 0;
+                    $PaymentForm__useRestCash.val(0);
+                }
+
+                if (useRestCash > maxUseRestCash) {
+                    useRestCash = maxUseRestCash;
+                    $PaymentForm__useRestCash.val(maxUseRestCash);
+                }
+
+                if ( useRestCash == maxUseRestCash ) {
+                    $PaymentForm__useRestCashAll.prop('checked', true);
+                }
+                else {
+                    $PaymentForm__useRestCashAll.prop('checked', false);
+                }
+
+                const pgPayPrice = orderPayPrice - useRestCash;
+
+                $PaymentForm__pgPayPriceDisplay.text(pgPayPrice);
+            }
+
+            function PaymentForm__useRestCashAllChanged() {
+                if ( $PaymentForm__useRestCashAll.prop('checked') ) {
+                    const maxUseRestCash = parseInt($PaymentForm__useRestCash.attr('max'));
+                    $PaymentForm__useRestCash.val(maxUseRestCash);
+                }
+                else {
+                    $PaymentForm__useRestCash.val(0);
+                }
+
+                PaymentForm__useRestCashFix();
+            }
+
+            PaymentForm__useRestCashFix();
+        </script>
+
+    </section>
+</main>
+</body>
+</html>
