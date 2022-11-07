@@ -81,4 +81,5 @@ public class PostService {
     public List<Post> findByAuthor(Member author) {
         return postRepository.findByAuthor(author);
     }
+
 }

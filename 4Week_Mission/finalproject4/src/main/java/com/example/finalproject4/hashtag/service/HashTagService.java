@@ -84,8 +84,11 @@ public class HashTagService {
         return hashtags;
     }
 
-
     public void deleteByPost(Post post) {
         hashTagRepository.deleteByPost(post);
+    }
+
+    public List<HashTag> findByKeyword(Keyword keyword) {
+        return hashTagRepository.findByKeyword(keyword);
     }
 }

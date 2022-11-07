@@ -40,5 +40,7 @@ public class MyBookService {
     }
 
 
-
+    public MyBook findById(Long id) {
+        return myBookRepository.findById(id).orElse(null);
+    }
 }
