@@ -1,9 +1,12 @@
 package com.example.finalproject4.product.controller;
 
+import com.example.finalproject4.hashtag.service.HashTagService;
 import com.example.finalproject4.keyword.entity.Keyword;
 import com.example.finalproject4.keyword.service.KeywordService;
 import com.example.finalproject4.member.entity.Member;
 import com.example.finalproject4.member.service.MemberService;
+import com.example.finalproject4.post.entity.Post;
+import com.example.finalproject4.post.service.PostService;
 import com.example.finalproject4.product.dto.ProductForm;
 import com.example.finalproject4.product.entity.Product;
 import com.example.finalproject4.product.service.ProductService;
@@ -20,6 +23,8 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import java.security.Principal;
+import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 
 @Controller
@@ -31,6 +36,8 @@ public class ProductController {
     private final ProductService productService;
     private final KeywordService keywordService;
     private final MemberService memberService;
+    private final PostService postService;
+    private final HashTagService hashTagService;
 
     @GetMapping("/list")
     public String showProductList(Model model){
@@ -67,7 +74,23 @@ public class ProductController {
         if(member.getNickname().equals("")){
             return "redirect:/product/list?errorMsg=" + Util.url.encode("작가명을 등록하지 않았습니다.");
         }
-        List<Keyword> keywords = keywordService.findAll();
+
+        List<Post> posts = postService.findByAuthor(member);
+
+        HashSet<Keyword> keywordHashSet = new HashSet<>();
+
+        for(Post p : posts){
+            List<Keyword> findKeywords = hashTagService.findByPost(p);
+            for(Keyword k : findKeywords){
+                keywordHashSet.add(k);
+            }
+        }
+
+        List<Keyword> keywords = new ArrayList<>();
+
+        for(Keyword keyword : keywordHashSet){
+            keywords.add(keyword);
+        }
 
         model.addAttribute("keywords", keywords);
 

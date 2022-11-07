@@ -77,4 +77,8 @@ public class PostService {
         hashTagService.deleteByPost(optPost.get());
         postRepository.deleteById(id);
     }
+
+    public List<Post> findByAuthor(Member author) {
+        return postRepository.findByAuthor(author);
+    }
 }
