@@ -36,9 +36,7 @@ public class ApiMemberController {
     public ResponseEntity<RsData> showLogin(String username, String password){
 
         HttpHeaders headers = new HttpHeaders();
-        headers.set("Authentication", "JWT_Access_Token");
-
-        log.info("username = {}", username);
+        //headers.set("Authentication", "JWT_Access_Token");
 
         Member member = memberService.findByUsername(username);
 
@@ -50,11 +48,7 @@ public class ApiMemberController {
             return Util.spring.responseEntityOf(RsData.of("F-3", "비밀번호가 일치하지 않습니다."));
         }
 
-        log.debug("Util.json.toStr(member.getAccessTokenClaims()) : " + Util.json.toStr(member.getAccessTokenClaims()));
-
         String accessToken = apiMemberService.genAccessToken(member);
-
-        String body = "username : %s, password : %s".formatted(member.getUsername(), member.getPassword());
 
         return Util.spring.responseEntityOf(
                 RsData.of(
@@ -74,8 +68,6 @@ public class ApiMemberController {
         Member member = securityMember.getMember();
 
         ApiMember apiMember = ApiMember.getApiMemberByMember(member);
-
-        log.info("로그인된 사용자 이름 = {}", member.getUsername());
 
         return Util.spring.responseEntityOf(
                 RsData.successOf(Util.mapOf("member", apiMember))

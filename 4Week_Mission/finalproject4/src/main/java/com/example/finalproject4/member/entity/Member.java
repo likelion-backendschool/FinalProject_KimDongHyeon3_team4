@@ -50,6 +50,9 @@ public class Member {
     @Column
     int revenue;
 
+    @Column(columnDefinition = "TEXT")
+    private String accessToken;
+
     @CreatedDate
     private LocalDateTime createDate;
 

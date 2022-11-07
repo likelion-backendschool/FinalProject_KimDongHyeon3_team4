@@ -2,6 +2,7 @@ package com.example.finalproject4.security.jwt;
 
 import com.example.finalproject4.member.entity.Member;
 import com.example.finalproject4.member.service.MemberService;
+import com.example.finalproject4.restapi.member.service.ApiMemberService;
 import com.example.finalproject4.security.dto.SecurityMember;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -25,6 +26,7 @@ public class JwtAuthorizationFilter extends OncePerRequestFilter {
 
     private final JwtProvider jwtProvider;
     private final MemberService memberService;
+    private final ApiMemberService apiMemberService;
 
     @Override
     protected void doFilterInternal(HttpServletRequest request,
@@ -42,6 +44,10 @@ public class JwtAuthorizationFilter extends OncePerRequestFilter {
                 Member member = memberService.findByUsername(username);
 
                 if(member == null) throw new RuntimeException("멤버가 null이네요");
+
+                if ( apiMemberService.verifyWithWhiteList(member, token) ) {
+                    forceAuthentication(member);
+                }
 
                 forceAuthentication(member);
             }
