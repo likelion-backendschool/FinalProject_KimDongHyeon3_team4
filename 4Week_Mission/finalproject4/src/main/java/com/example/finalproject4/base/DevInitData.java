@@ -68,16 +68,18 @@ public class DevInitData {
             Member member2 = memberRepository.findByUsername("user2");
 
            postService.save("제목1","내용1", member1, "#C언어 #블로그");
-           postService.save("제목2","내용2", member2, "#인프라 #뭐할까");
-           postService.save("제목3","내용3", member1, "#자바 #배고파");
+           postService.save("제목2","내용2", member1, "#C언어");
+           postService.save("제목3","내용3", member1, "#C언어 #자바");
            postService.save("제목4","내용4", member2, "#파이썬 #프로그래밍");
+           postService.save("제목5","내용5", member2, "#C언어");
+           postService.save("제목6","내용6", member2, "#인프라");
+           postService.save("제목7","내용7", member2, "#도커");
+           postService.save("제목8","내용8", member2, "#인프라 #파이썬");
 
-           Keyword keyword1 = keywordService.findByContent("자바");
-           Keyword keyword2 = keywordService.findByContent("파이썬");
-           Keyword keyword3 = keywordService.findByContent("C언어");
-           Keyword keyword4 = keywordService.findByContent("프로그래밍");
-           Keyword keyword5 = keywordService.findByContent("배고파");
-           Keyword keyword6 = keywordService.findByContent("블로그");
+           Keyword keyword1 = keywordService.findByContent("C언어");
+           Keyword keyword2 = keywordService.findByContent("자바");
+           Keyword keyword3 = keywordService.findByContent("인프라");
+           Keyword keyword4 = keywordService.findByContent("파이썬");
 
            productRepository.save(Product.builder()
                            .author(member1)
@@ -89,7 +91,7 @@ public class DevInitData {
                            .build());
 
             productRepository.save(Product.builder()
-                    .author(member2)
+                    .author(member1)
                     .keyword(keyword2)
                     .subject("도서2")
                     .price((int) (200*1.6))
@@ -98,7 +100,7 @@ public class DevInitData {
                     .build());
 
             productRepository.save(Product.builder()
-                    .author(member1)
+                    .author(member2)
                     .keyword(keyword3)
                     .subject("도서3")
                     .price((int) (300*1.6))
@@ -115,34 +117,16 @@ public class DevInitData {
                     .salePrice(400)
                     .build());
 
-            productRepository.save(Product.builder()
-                    .author(member2)
-                    .keyword(keyword5)
-                    .subject("도서5")
-                    .price((int) (500*1.6))
-                    .wholesalePrice((int) (500*0.9))
-                    .salePrice(500)
-                    .build());
-
-            productRepository.save(Product.builder()
-                    .author(member2)
-                    .keyword(keyword6)
-                    .subject("도서6")
-                    .price((int) (600*1.6))
-                    .wholesalePrice((int) (600*0.9))
-                    .salePrice(600)
-                    .build());
-
             Product product1 = productRepository.findById(1L).orElse(null);
             Product product2 = productRepository.findById(2L).orElse(null);
             Product product3 = productRepository.findById(3L).orElse(null);
             Product product4 = productRepository.findById(4L).orElse(null);
 
-            cartService.save(member1, product2);
+            cartService.save(member1, product3);
             cartService.save(member1, product4);
 
             cartService.save(member2, product1);
-            cartService.save(member2, product3);
+            cartService.save(member2, product2);
 
             memberService.addCash(member1, 10_000, "충전__무통장입금");
             memberService.addCash(member1, 20_000, "충전__무통장입금");
@@ -159,7 +143,6 @@ public class DevInitData {
 
             withdrawService.save("우리은행","1002156314175", 5000, member2);
             withdrawService.save("국민은행","1002156314175", 5000, member1);
-
         };
     }
 
