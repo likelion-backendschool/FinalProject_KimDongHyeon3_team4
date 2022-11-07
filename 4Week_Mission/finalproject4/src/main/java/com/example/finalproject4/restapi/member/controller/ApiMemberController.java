@@ -8,6 +8,8 @@ import com.example.finalproject4.restapi.member.dto.ApiMember;
 import com.example.finalproject4.restapi.member.service.ApiMemberService;
 import com.example.finalproject4.security.dto.SecurityMember;
 import com.example.finalproject4.util.Util;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpHeaders;
@@ -23,6 +25,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/api/v1/member")
 @RequiredArgsConstructor
 @Slf4j
+@Tag(name = "MemberController", description = "로그인, 회원의 정보 제공 기능을 담당하는 컨트롤러")
 public class ApiMemberController {
 
     private final MemberService memberService;
@@ -66,7 +69,7 @@ public class ApiMemberController {
     }
 
     @GetMapping("/me")
-    public ResponseEntity<RsData> me(@AuthenticationPrincipal SecurityMember securityMember) {
+    public ResponseEntity<RsData> me(@Parameter(hidden = true) @AuthenticationPrincipal SecurityMember securityMember) {
 
         Member member = securityMember.getMember();
 

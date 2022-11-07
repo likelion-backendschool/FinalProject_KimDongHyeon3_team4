@@ -11,6 +11,8 @@ import com.example.finalproject4.post.service.PostService;
 import com.example.finalproject4.restapi.mybook.dto.ApiMyBook;
 import com.example.finalproject4.security.dto.SecurityMember;
 import com.example.finalproject4.util.Util;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -25,6 +27,7 @@ import java.util.List;
 @RestController
 @RequestMapping("/api/v1/myBooks")
 @RequiredArgsConstructor
+@Tag(name = "MyBookController", description = "회원이 구매한 도서 리스트 조회, 회원이 구매한 도서 상세 조회 기능을 구현한 컨트롤러")
 public class ApiMyBookController {
 
     private final MyBookService myBookService;
@@ -32,7 +35,7 @@ public class ApiMyBookController {
     private final PostService postService;
 
     @GetMapping("")
-    public ResponseEntity<RsData> showMyBookList(@AuthenticationPrincipal SecurityMember securityMember){
+    public ResponseEntity<RsData> showMyBookList(@Parameter(hidden = true) @AuthenticationPrincipal SecurityMember securityMember){
 
         Member member = securityMember.getMember();
 
@@ -48,7 +51,7 @@ public class ApiMyBookController {
     }
 
     @GetMapping("/{myBookId}")
-    public ResponseEntity<RsData> showMyBookDetail(@AuthenticationPrincipal SecurityMember securityMember,
+    public ResponseEntity<RsData> showMyBookDetail(@Parameter(hidden = true) @AuthenticationPrincipal SecurityMember securityMember,
                                                    @PathVariable Long myBookId){
 
         //1. 해당 선택한 북을 가져온다.

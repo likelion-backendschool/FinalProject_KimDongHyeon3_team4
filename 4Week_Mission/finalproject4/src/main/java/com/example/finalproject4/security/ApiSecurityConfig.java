@@ -38,6 +38,7 @@ public class ApiSecurityConfig {
                         authorizeRequests -> authorizeRequests
                                 .antMatchers("/api/*/member/login").permitAll()
                                 //.antMatchers("/api/*/member/me").permitAll()
+//                                .antMatchers("/v3/api-docs/**", "/swagger-ui/**", "/swagger-ui.html").hasAuthority("ADMIN")
                                 .anyRequest()
                                 .authenticated() // 최소자격 : 로그인
                 )

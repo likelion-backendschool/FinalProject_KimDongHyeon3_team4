@@ -25,19 +25,19 @@ public class SecurityConfig {
                 .csrf(
                         csrf -> csrf.disable()
                 )
-                .formLogin(
-                        formLogin -> formLogin
-                                .loginPage("/member/login") // GET
-                                .loginProcessingUrl("/member/login") // POST
-                                .successHandler(authenticationSuccessHandler)
-                                .failureHandler(authenticationFailureHandler)
-                )
                 .authorizeRequests(
                         authorizeRequests -> authorizeRequests
                                 .antMatchers("/v3/api-docs/**", "/swagger-ui/**", "/swagger-ui.html")
                                 .hasAuthority("ADMIN")
                                 .anyRequest()
                                 .permitAll()
+                )
+                .formLogin(
+                        formLogin -> formLogin
+                                .loginPage("/member/login") // GET
+                                .loginProcessingUrl("/member/login") // POST
+                                .successHandler(authenticationSuccessHandler)
+                                .failureHandler(authenticationFailureHandler)
                 )
                 .logout(
                         logout -> logout.logoutUrl("/member/logout")
