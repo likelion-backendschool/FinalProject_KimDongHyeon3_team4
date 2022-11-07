@@ -157,8 +157,6 @@ public class DevInitData {
             orderService.payByRestCash(order2);
             orderService.refund(order1);
 
-
-
             withdrawService.save("우리은행","1002156314175", 5000, member2);
             withdrawService.save("국민은행","1002156314175", 5000, member1);
 
