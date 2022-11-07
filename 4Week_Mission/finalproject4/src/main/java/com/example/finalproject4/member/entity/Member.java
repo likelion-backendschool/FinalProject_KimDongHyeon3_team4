@@ -1,6 +1,7 @@
 package com.example.finalproject4.member.entity;
 
 import com.example.finalproject4.util.Util;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.*;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
@@ -63,6 +64,7 @@ public class Member {
         return authorities;
     }
 
+    @JsonIgnore
     public Map<String, Object> getAccessTokenClaims() {
         return Util.mapOf(
                 "id", getId(),

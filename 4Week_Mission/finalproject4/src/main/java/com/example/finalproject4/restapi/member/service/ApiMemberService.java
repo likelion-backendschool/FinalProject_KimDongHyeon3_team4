@@ -15,4 +15,5 @@ public class ApiMemberService {
         return jwtProvider.generateAccessToken(member.getAccessTokenClaims(), 60 * 60 * 24 * 90);
     }
 
+
 }

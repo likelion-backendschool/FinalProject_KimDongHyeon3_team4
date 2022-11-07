@@ -4,6 +4,7 @@ package com.example.finalproject4.restapi.member.controller;
 import com.example.finalproject4.base.dto.RsData;
 import com.example.finalproject4.member.entity.Member;
 import com.example.finalproject4.member.service.MemberService;
+import com.example.finalproject4.restapi.member.dto.ApiMember;
 import com.example.finalproject4.restapi.member.service.ApiMemberService;
 import com.example.finalproject4.security.dto.SecurityMember;
 import com.example.finalproject4.util.Util;
@@ -26,7 +27,6 @@ public class ApiMemberController {
 
     private final MemberService memberService;
     private final ApiMemberService apiMemberService;
-
     private final PasswordEncoder passwordEncoder;
 
     @PostMapping("/login")
@@ -70,8 +70,12 @@ public class ApiMemberController {
 
         Member member = securityMember.getMember();
 
+        ApiMember apiMember = ApiMember.getApiMemberByMember(member);
+
         log.info("로그인된 사용자 이름 = {}", member.getUsername());
 
-        return Util.spring.responseEntityOf(RsData.successOf(member));
+        return Util.spring.responseEntityOf(
+                RsData.successOf(Util.mapOf("member", apiMember))
+        );
     }
 }
