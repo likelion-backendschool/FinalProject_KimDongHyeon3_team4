@@ -67,14 +67,11 @@ public class ApiMemberController {
 
     @GetMapping("/me")
     public ResponseEntity<RsData> me(@AuthenticationPrincipal SecurityMember securityMember) {
-//        if (securityMember == null) { // 임시코드, 나중에는 시프링 시큐리티를 이용해서 로그인을 안했다면, 아예 여기로 못 들어오도록
-//            return Util.spring.responseEntityOf(RsData.failOf(null));
-//        }
 
         Member member = securityMember.getMember();
 
         log.info("로그인된 사용자 이름 = {}", member.getUsername());
 
-        return Util.spring.responseEntityOf(RsData.successOf("성공성공"));
+        return Util.spring.responseEntityOf(RsData.successOf(member));
     }
 }
