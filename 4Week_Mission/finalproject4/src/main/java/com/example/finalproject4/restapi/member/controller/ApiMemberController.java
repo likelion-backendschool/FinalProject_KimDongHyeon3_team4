@@ -5,6 +5,7 @@ import com.example.finalproject4.base.dto.RsData;
 import com.example.finalproject4.member.entity.Member;
 import com.example.finalproject4.member.service.MemberService;
 import com.example.finalproject4.restapi.member.dto.ApiMember;
+import com.example.finalproject4.restapi.member.dto.ApiMemberDto;
 import com.example.finalproject4.restapi.member.service.ApiMemberService;
 import com.example.finalproject4.security.dto.SecurityMember;
 import com.example.finalproject4.util.Util;
@@ -12,14 +13,10 @@ import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/api/v1/member")
@@ -33,10 +30,13 @@ public class ApiMemberController {
     private final PasswordEncoder passwordEncoder;
 
     @PostMapping("/login")
-    public ResponseEntity<RsData> showLogin(String username, String password){
+    public ResponseEntity<RsData> showLogin(@RequestBody ApiMemberDto apiMemberDto) {
 
-        HttpHeaders headers = new HttpHeaders();
-        //headers.set("Authentication", "JWT_Access_Token");
+        String username = apiMemberDto.getUsername();
+        String password = apiMemberDto.getPassword();
+
+
+        log.info("username = {}", username);
 
         Member member = memberService.findByUsername(username);
 

@@ -18,17 +18,12 @@ import static org.springframework.security.config.http.SessionCreationPolicy.STA
 @EnableWebSecurity
 @RequiredArgsConstructor
 public class ApiSecurityConfig {
-
     private final JwtAuthorizationFilter jwtAuthorizationFilter;
-//    private final ApiAuthenticationEntryPoint authenticationEntryPoint;
 
     @Bean
     public SecurityFilterChain apiSecurityFilterChain(HttpSecurity http, AuthenticationConfiguration authenticationConfiguration) throws Exception {
         http
                 .antMatcher("/api/**")
-//                .exceptionHandling(exceptionHandling -> exceptionHandling
-//                        .authenticationEntryPoint(authenticationEntryPoint)
-//                )
                 .httpBasic().disable()
                 .csrf().disable()
                 .cors(cors -> cors
@@ -54,7 +49,6 @@ public class ApiSecurityConfig {
 
         return http.build();
     }
-
 
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
