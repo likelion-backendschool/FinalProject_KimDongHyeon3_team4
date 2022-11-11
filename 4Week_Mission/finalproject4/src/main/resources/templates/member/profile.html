@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html layout:decorate="~{layout/layout.html}">
+
+<head>
+    <title>마이페이지</title>
+</head>
+
+<body>
+<main layout:fragment="main">
+    <section class="section section-join flex-grow flex flex-col items-center justify-center">
+
+        <script>
+            if( window.location.href.split("?").length > 1){
+                var misMatchPassword = window.location.href.split("?")[1];
+                var misMatchPasswordMsg = misMatchPassword.split("=")[1];
+
+                warningModal(misMatchPasswordMsg);
+            }
+        </script>
+
+        <div class="max-w-3xl w-full px-2 pt-4">
+            <ul class="flex border-b mb-3">
+                <li class="-mb-px mr-1">
+                    <a class="bg-white inline-block border-l border-t border-r rounded-t py-2 px-4 text-blue-700 font-semibold"
+                       href="/member/profile">회원정보</a>
+                </li>
+                <li class="mr-1">
+                    <a class="bg-white inline-block py-2 px-4 text-blue-500 hover:text-blue-800 font-semibold"
+                       href="/member/mybook">구매한 도서</a>
+                </li>
+                <li class="mr-1">
+                    <a class="bg-white inline-block py-2 px-4 text-blue-500 hover:text-blue-800 font-semibold"
+                       href="/member/withdraw/list">출금 내역</a>
+                </li>
+            </ul>
+
+            <h1 class="font-bold text-lg">회원정보</h1>
+
+            <div class="flex flex-col gap-3">
+                <div class="form-control">
+                    <label class="label">
+                        <span class="label-text">아이디</span>
+                    </label>
+                    <div th:text="${#authentication.principal.username}"></div>
+                </div>
+
+
+                <div class="form-control">
+                    <label class="label">
+                        <span class="label-text">이메일</span>
+                    </label>
+                    <div th:text="${#authentication.principal.email}"></div>
+                </div>
+
+
+                <div class="form-control">
+                        <label class="label">
+                            <span class="label-text">현재 작가명</span>
+                        </label>
+                        <div th:text="${#authentication.principal.nickname} == null ? '일반회원 입니다. 작가명을 수정하세요' : ${#authentication.principal.nickname}"></div>
+                </div>
+
+                <div class="form-control">
+                    <label class="label">
+                        <span class="label-text">나의 예치금</span>
+                    </label>
+                    <div th:text="${#authentication.principal.restCash}"></div>
+                    <a href="/order/charge" class="btn btn-secondary btn-outline">충전하기</a>
+                    <a href="/member/withdraw/apply" class="btn btn-secondary btn-outline">출금하기</a>
+                </div>
+
+                <div class="grid grid-cols-2 mt-2 gap-2">
+                    <a href="/member/modify" class="btn btn-secondary btn-outline">작가명 변경하기</a>
+                    <a href="/member/modifyPassword" class="btn btn-secondary btn-outline">비밀번호 변경하기</a>
+                </div>
+            </div>
+
+        </div>
+    </section>
+</main>
+</body>
+</html>

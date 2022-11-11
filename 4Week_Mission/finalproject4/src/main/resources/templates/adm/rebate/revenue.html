@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html layout:decorate="~{adm/layout/layout.html}">
+
+<head>
+    <title>관리자 정산페이지</title>
+</head>
+
+<body>
+<main layout:fragment="main">
+    <section class="section section-join flex-grow flex flex-col items-center justify-center">
+        <h2> 총 수익금</h2>
+        <div th:text="${@revenueService.getTotalRevenue()}"></div>
+        <div class="container mx-auto flex-grow flex items-center justify-center">
+            <table class="table table-compact w-full">
+                <thead>
+                <tr>
+                    <th>수익번호</th>
+                    <th>수익금액</th>
+                    <th>상품명</th>
+                    <th>결제가격</th>
+                    <th>판매자</th>
+                    <th>예상정산가</th>
+                    <th>정산날짜</th>
+                    <th>정산내역번호</th>
+                </tr>
+                </thead>
+
+                <tbody>
+                <tr th:each="revenue : ${revenues}">
+                    <td th:text="${revenue.rebateOrderItem.orderItem.id}"></td>
+                    <td th:text="${revenue.revenue}"></td>
+                    <td th:text="${revenue.rebateOrderItem.productSubject}"></td>
+                    <td th:text="${revenue.rebateOrderItem.payPrice}"></td>
+                    <td th:text="${revenue.rebateOrderItem.sellerName}"></td>
+                    <td th:text="${revenue.rebateOrderItem.getRebatePrice}"></td>
+                    <td th:text="${revenue.rebateOrderItem.rebateDate}"></td>
+                    <td th:text="${revenue.rebateOrderItem.rebateCashLog?.id}"></td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </section>
+</main>
+</body>
+</html>
